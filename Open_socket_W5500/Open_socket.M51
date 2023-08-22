@@ -1,4 +1,4 @@
-BL51 BANKED LINKER/LOCATER V6.22                                                        08/22/2023  13:41:10  PAGE 1
+BL51 BANKED LINKER/LOCATER V6.22                                                        08/22/2023  15:56:44  PAGE 1
 
 
 BL51 BANKED LINKER/LOCATER V6.22, INVOKED BY:
@@ -19,7 +19,7 @@ LINK MAP OF MODULE:  Open_socket (MAIN)
             REG     0000H     0008H     ABSOLUTE     "REG BANK 0"
 
             * * * * * * *   C O D E   M E M O R Y   * * * * * * *
-            CODE    0000H     030DH     ABSOLUTE     
+            CODE    0000H     037FH     ABSOLUTE     
 
 
 
@@ -59,7 +59,7 @@ SYMBOL TABLE OF MODULE:  Open_socket (MAIN)
   N:0000H         SYMBOL        ADC0_PAGE
   D:00BEH         SYMBOL        ADC2
   D:00BCH         SYMBOL        ADC2CF
-BL51 BANKED LINKER/LOCATER V6.22                                                      08/22/2023  13:41:10  PAGE 2
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/22/2023  15:56:44  PAGE 2
 
 
   D:00E8H         SYMBOL        ADC2CN
@@ -119,7 +119,7 @@ SYMBOL TABLE OF MODULE:  Open_socket (MAIN)
   D:00D4H         SYMBOL        DAC0CN
   D:00D3H         SYMBOL        DAC0H
   D:00D2H         SYMBOL        DAC0L
-BL51 BANKED LINKER/LOCATER V6.22                                                      08/22/2023  13:41:10  PAGE 3
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/22/2023  15:56:44  PAGE 3
 
 
   N:0000H         SYMBOL        DAC0_PAGE
@@ -165,6 +165,7 @@ SYMBOL TABLE OF MODULE:  Open_socket (MAIN)
   B:0088H.0       SYMBOL        IT0
   B:0088H.2       SYMBOL        IT1
   N:0000H         SYMBOL        LEGACY_PAGE
+  C:0302H         SYMBOL        LOOP
   D:0093H         SYMBOL        MAC0ACC0
   D:0094H         SYMBOL        MAC0ACC1
   D:0095H         SYMBOL        MAC0ACC2
@@ -178,10 +179,10 @@ SYMBOL TABLE OF MODULE:  Open_socket (MAIN)
   B:00C0H.0       SYMBOL        MAC0N
   D:0097H         SYMBOL        MAC0OVR
   D:00CFH         SYMBOL        MAC0RNDH
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/22/2023  15:56:44  PAGE 4
+
+
   D:00CEH         SYMBOL        MAC0RNDL
-BL51 BANKED LINKER/LOCATER V6.22                                                      08/22/2023  13:41:10  PAGE 4
-
-
   B:00C0H.1       SYMBOL        MAC0SO
   D:00C0H         SYMBOL        MAC0STA
   B:00C0H.2       SYMBOL        MAC0Z
@@ -189,6 +190,7 @@ SYMBOL TABLE OF MODULE:  Open_socket (MAIN)
   B:0098H.5       SYMBOL        MCE1
   B:00F8H.5       SYMBOL        MODF
   N:0000H         SYMBOL        MR
+  C:033BH         SYMBOL        NEW_DATA
   B:00F8H.2       SYMBOL        NSSMD0
   B:00F8H.3       SYMBOL        NSSMD1
   D:008BH         SYMBOL        OSCICL
@@ -237,17 +239,16 @@ SYMBOL TABLE OF MODULE:  Open_socket (MAIN)
   D:00D9H         SYMBOL        PCA0MD
   N:0000H         SYMBOL        PCA0_PAGE
   D:0087H         SYMBOL        PCON
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/22/2023  15:56:44  PAGE 5
+
+
   B:00A0H.0       SYMBOL        PIN_RSTN
   D:0089H         SYMBOL        PLL0CN
-BL51 BANKED LINKER/LOCATER V6.22                                                      08/22/2023  13:41:10  PAGE 5
-
-
   D:008DH         SYMBOL        PLL0DIV
   D:008FH         SYMBOL        PLL0FLT
   D:008EH         SYMBOL        PLL0MUL
   N:000FH         SYMBOL        PLL0_PAGE
-  C:02FBH         SYMBOL        POLL_SPIF_R
-  C:0307H         SYMBOL        POLL_SPIF_W
+  C:0302H         SYMBOL        POLL_OPEN
   B:00B8H.4       SYMBOL        PS
   D:00B1H         SYMBOL        PSBANK
   D:008FH         SYMBOL        PSCTL
@@ -277,9 +278,13 @@ SYMBOL TABLE OF MODULE:  Open_socket (MAIN)
   N:0019H         SYMBOL        RTR1
   B:00F8H.4       SYMBOL        RXOVRN
   B:0098H.7       SYMBOL        S1MODE
+  N:0001H         SYMBOL        S1_CR
   N:0000H         SYMBOL        S1_MR
   N:0004H         SYMBOL        S1_PORT
   N:001EH         SYMBOL        S1_RXBUF_SIZE
+  N:0028H         SYMBOL        S1_RX_RD
+  N:002AH         SYMBOL        S1_RX_WR
+  N:0003H         SYMBOL        S1_SR
   N:0016H         SYMBOL        S1_TTL
   N:001FH         SYMBOL        S1_TXBUF_SIZE
   D:00A9H         SYMBOL        SADDR0
@@ -294,14 +299,14 @@ SYMBOL TABLE OF MODULE:  Open_socket (MAIN)
   D:0096H         SYMBOL        SFRPGCN
   N:0009H         SYMBOL        SHAR1
   B:00C0H.3       SYMBOL        SI
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/22/2023  15:56:44  PAGE 6
+
+
   N:000FH         SYMBOL        SIPR1
   B:0098H.7       SYMBOL        SM00
   B:0098H.6       SYMBOL        SM10
   B:0098H.5       SYMBOL        SM20
   D:00C3H         SYMBOL        SMB0ADR
-BL51 BANKED LINKER/LOCATER V6.22                                                      08/22/2023  13:41:10  PAGE 6
-
-
   D:00C0H         SYMBOL        SMB0CN
   D:00CFH         SYMBOL        SMB0CR
   D:00C2H         SYMBOL        SMB0DAT
@@ -315,8 +320,8 @@ SYMBOL TABLE OF MODULE:  Open_socket (MAIN)
   D:00F8H         SYMBOL        SPI0CN
   D:009BH         SYMBOL        SPI0DAT
   N:0000H         SYMBOL        SPI0_PAGE
-  C:02F9H         SYMBOL        SPI0_R
-  C:0305H         SYMBOL        SPI0_W
+  C:036BH         SYMBOL        SPI0_R
+  C:0377H         SYMBOL        SPI0_W
   B:00F8H.0       SYMBOL        SPIEN
   B:00F8H.7       SYMBOL        SPIF
   D:0091H         SYMBOL        SSTA0
@@ -354,21 +359,22 @@ SYMBOL TABLE OF MODULE:  Open_socket (MAIN)
   D:00CDH         SYMBOL        TMR4H
   D:00CCH         SYMBOL        TMR4L
   N:0002H         SYMBOL        TMR4_PAGE
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/22/2023  15:56:44  PAGE 7
+
+
   B:0088H.4       SYMBOL        TR0
   B:0088H.6       SYMBOL        TR1
   B:00C8H.2       SYMBOL        TR2
   B:00C8H.2       SYMBOL        TR3
   B:00C8H.2       SYMBOL        TR4
-BL51 BANKED LINKER/LOCATER V6.22                                                      08/22/2023  13:41:10  PAGE 7
-
-
   B:00F8H.1       SYMBOL        TXBMT
   N:0000H         SYMBOL        UART0_PAGE
   N:0001H         SYMBOL        UART1_PAGE
-  C:02F4H         SYMBOL        WAIT_LN
-  C:02F0H         SYMBOL        WAIT_LONG
-  C:02EDH         SYMBOL        WAIT_SH
-  C:02EBH         SYMBOL        WAIT_SHORT
+  C:031BH         SYMBOL        WAIT_DATA
+  C:0366H         SYMBOL        WAIT_LN
+  C:0362H         SYMBOL        WAIT_LONG
+  C:035FH         SYMBOL        WAIT_SH
+  C:035DH         SYMBOL        WAIT_SHORT
   B:00F8H.6       SYMBOL        WCOL
   D:00FFH         SYMBOL        WDTCN
   D:00E1H         SYMBOL        XBR0
@@ -413,15 +419,15 @@ SYMBOL TABLE OF MODULE:  Open_socket (MAIN)
   C:0058H         LINE#         64
   C:005AH         LINE#         66
   C:005BH         LINE#         67
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/22/2023  15:56:44  PAGE 8
+
+
   C:005DH         LINE#         69
   C:005FH         LINE#         70
   C:0061H         LINE#         72
   C:0063H         LINE#         73
   C:0065H         LINE#         75
   C:0067H         LINE#         76
-BL51 BANKED LINKER/LOCATER V6.22                                                      08/22/2023  13:41:10  PAGE 8
-
-
   C:0069H         LINE#         78
   C:006BH         LINE#         79
   C:006DH         LINE#         81
@@ -473,15 +479,15 @@ SYMBOL TABLE OF MODULE:  Open_socket (MAIN)
   C:00C7H         LINE#         156
   C:00C9H         LINE#         157
   C:00CBH         LINE#         159
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/22/2023  15:56:44  PAGE 9
+
+
   C:00CCH         LINE#         160
   C:00CEH         LINE#         162
   C:00D0H         LINE#         163
   C:00D2H         LINE#         165
   C:00D4H         LINE#         166
   C:00D6H         LINE#         168
-BL51 BANKED LINKER/LOCATER V6.22                                                      08/22/2023  13:41:10  PAGE 9
-
-
   C:00D8H         LINE#         169
   C:00DAH         LINE#         171
   C:00DCH         LINE#         172
@@ -533,15 +539,15 @@ SYMBOL TABLE OF MODULE:  Open_socket (MAIN)
   C:0135H         LINE#         250
   C:0137H         LINE#         252
   C:0138H         LINE#         253
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/22/2023  15:56:44  PAGE 10
+
+
   C:013AH         LINE#         255
   C:013CH         LINE#         256
   C:013EH         LINE#         258
   C:0140H         LINE#         259
   C:0142H         LINE#         261
   C:0144H         LINE#         262
-BL51 BANKED LINKER/LOCATER V6.22                                                      08/22/2023  13:41:10  PAGE 10
-
-
   C:0146H         LINE#         264
   C:0148H         LINE#         265
   C:014AH         LINE#         267
@@ -593,15 +599,15 @@ SYMBOL TABLE OF MODULE:  Open_socket (MAIN)
   C:01A2H         LINE#         342
   C:01A4H         LINE#         343
   C:01A6H         LINE#         345
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/22/2023  15:56:44  PAGE 11
+
+
   C:01A8H         LINE#         346
   C:01AAH         LINE#         349
   C:01ACH         LINE#         350
   C:01AEH         LINE#         352
   C:01AFH         LINE#         353
   C:01B1H         LINE#         355
-BL51 BANKED LINKER/LOCATER V6.22                                                      08/22/2023  13:41:10  PAGE 11
-
-
   C:01B3H         LINE#         356
   C:01B5H         LINE#         358
   C:01B7H         LINE#         359
@@ -653,15 +659,15 @@ SYMBOL TABLE OF MODULE:  Open_socket (MAIN)
   C:020FH         LINE#         432
   C:0211H         LINE#         434
   C:0213H         LINE#         435
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/22/2023  15:56:44  PAGE 12
+
+
   C:0215H         LINE#         437
   C:0217H         LINE#         438
   C:0219H         LINE#         440
   C:021BH         LINE#         441
   C:021DH         LINE#         444
   C:021FH         LINE#         445
-BL51 BANKED LINKER/LOCATER V6.22                                                      08/22/2023  13:41:10  PAGE 12
-
-
   C:0221H         LINE#         447
   C:0222H         LINE#         448
   C:0224H         LINE#         450
@@ -713,15 +719,15 @@ SYMBOL TABLE OF MODULE:  Open_socket (MAIN)
   C:027DH         LINE#         523
   C:027EH         LINE#         524
   C:0280H         LINE#         526
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/22/2023  15:56:44  PAGE 13
+
+
   C:0282H         LINE#         527
   C:0284H         LINE#         529
   C:0286H         LINE#         530
   C:0288H         LINE#         532
   C:028AH         LINE#         533
   C:028CH         LINE#         535
-BL51 BANKED LINKER/LOCATER V6.22                                                      08/22/2023  13:41:10  PAGE 13
-
-
   C:028EH         LINE#         536
   C:0290H         LINE#         539
   C:0292H         LINE#         540
@@ -759,19 +765,86 @@ SYMBOL TABLE OF MODULE:  Open_socket (MAIN)
   C:02CFH         LINE#         590
   C:02D1H         LINE#         592
   C:02D3H         LINE#         593
-  C:02D5H         LINE#         599
-  C:02D7H         LINE#         600
-  C:02D9H         LINE#         602
-  C:02DAH         LINE#         603
-  C:02DCH         LINE#         605
-  C:02DEH         LINE#         606
-  C:02E0H         LINE#         608
-  C:02E2H         LINE#         609
-  C:02E4H         LINE#         611
-  C:02E5H         LINE#         612
-  C:02E7H         LINE#         614
-  C:02E9H         LINE#         615
+  C:02D5H         LINE#         597
+  C:02D7H         LINE#         598
+  C:02D9H         LINE#         600
+  C:02DAH         LINE#         601
+  C:02DCH         LINE#         603
+  C:02DEH         LINE#         604
+  C:02E0H         LINE#         606
+  C:02E2H         LINE#         607
+  C:02E4H         LINE#         609
+  C:02E5H         LINE#         610
+  C:02E7H         LINE#         612
+  C:02E9H         LINE#         613
+  C:02EBH         LINE#         617
+  C:02EDH         LINE#         618
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/22/2023  15:56:44  PAGE 14
+
+
+  C:02EFH         LINE#         620
+  C:02F0H         LINE#         621
+  C:02F2H         LINE#         623
+  C:02F4H         LINE#         624
+  C:02F6H         LINE#         626
+  C:02F8H         LINE#         627
+  C:02FAH         LINE#         629
+  C:02FCH         LINE#         630
+  C:02FEH         LINE#         632
+  C:0300H         LINE#         633
+  C:0302H         LINE#         639
+  C:0304H         LINE#         640
+  C:0306H         LINE#         642
+  C:0307H         LINE#         643
+  C:0309H         LINE#         645
+  C:030BH         LINE#         646
+  C:030DH         LINE#         648
+  C:030FH         LINE#         649
+  C:0311H         LINE#         651
+  C:0312H         LINE#         652
+  C:0314H         LINE#         654
+  C:0316H         LINE#         655
+  C:0318H         LINE#         657
+  C:031BH         LINE#         661
+  C:031DH         LINE#         662
+  C:031FH         LINE#         664
+  C:0320H         LINE#         665
+  C:0322H         LINE#         667
+  C:0324H         LINE#         668
+  C:0326H         LINE#         670
+  C:0328H         LINE#         671
+  C:032AH         LINE#         673
+  C:032BH         LINE#         674
+  C:032DH         LINE#         676
+  C:032EH         LINE#         677
+  C:0330H         LINE#         679
+  C:0332H         LINE#         680
+  C:0334H         LINE#         682
+  C:0336H         LINE#         683
+  C:0339H         LINE#         684
+  C:033BH         LINE#         688
+  C:033DH         LINE#         690
+  C:033FH         LINE#         691
+  C:0341H         LINE#         693
+  C:0342H         LINE#         694
+  C:0344H         LINE#         696
+  C:0346H         LINE#         697
+  C:0348H         LINE#         699
+  C:034AH         LINE#         700
+  C:034CH         LINE#         702
+  C:034DH         LINE#         703
+  C:034FH         LINE#         704
+  C:0350H         LINE#         706
+  C:0351H         LINE#         707
+  C:0353H         LINE#         708
+  C:0355H         LINE#         710
+  C:0357H         LINE#         711
+BL51 BANKED LINKER/LOCATER V6.22                                                      08/22/2023  15:56:44  PAGE 15
+
+
+  C:0359H         LINE#         722
+  C:035BH         LINE#         736
   -------         ENDMOD        MAIN
 
-Program Size: data=8.0 xdata=0 code=781
+Program Size: data=8.0 xdata=0 code=895
 LINK/LOCATE RUN COMPLETE.  0 WARNING(S),  0 ERROR(S)

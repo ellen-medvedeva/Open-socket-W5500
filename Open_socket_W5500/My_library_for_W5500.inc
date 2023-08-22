@@ -13,10 +13,14 @@ S1_PORT		EQU		0x04
 S1_TTL		EQU		0x16
 S1_RXBUF_SIZE	EQU		0x1E
 S1_TXBUF_SIZE	EQU		0x1F
-	
-	
-	
-	
+S1_SR		EQU		0x03
+S1_CR		EQU		0x01
+S1_RX_WR	EQU		0x2A
+S1_RX_RD	EQU		0x28
+
+
+
+
 Wait_short:
 	MOV		R0,			#100
 	Wait_sh:
@@ -36,8 +40,8 @@ RET
 SPI0_R:
 	MOV		SPI0DAT,	A
 
-poll_SPIF_r:
-	JNB		SPIF,		poll_SPIF_r		
+;poll_SPIF_r:
+	JNB		SPIF,		$ ;poll_SPIF_r		
 	CLR		SPIF
 
 	MOV		A,			SPI0DAT
@@ -47,8 +51,8 @@ RET
 SPI0_W:
 	MOV		SPI0DAT,	A
 
-poll_SPIF_w:
-	JNB		SPIF,		poll_SPIF_w	
+;poll_SPIF_w:
+	JNB		SPIF,		$ ; poll_SPIF_w	
 	CLR		SPIF
 RET
 

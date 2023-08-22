@@ -591,21 +591,19 @@ CSEG AT 0
 		
 	SETB	P0.3
 	ACALL	Wait_short
-	
-	
-	
-	
-;Прочитаем что-нибудь:
+;-----------------------------------------	
+		
+;Сделаем первую небольшую проверку.
 	CLR		P0.3
 	ACALL	Wait_short
 	
 	CLR		A
 	ACALL	SPI0_W
 
-	MOV		A,		#S1_TXBUF_SIZE
+	MOV		A,		#S1_SR
 	ACALL	SPI0_W
 
-	MOV		A,		#11101000b
+	MOV		A,		#00101000b
 	ACALL	SPI0_W
 	
 	CLR		A
@@ -613,6 +611,115 @@ CSEG AT 0
 	
 	SETB	P0.3
 	ACALL	Wait_short
+;Как видим, сокет пока закрыт.
+
+;Откроем сокет 1.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_CR
+	ACALL	SPI0_W
+
+	MOV		A,		#00101100b
+	ACALL	SPI0_W
+	
+	MOV		A,		#0x01
+	ACALL	SPI0_W
+	
+	SETB	P0.3
+	ACALL	Wait_short
+	
+	
+Loop:
+Poll_Open:
+;Теперь в статусе мы дожны увидеть 0x22.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_SR
+	ACALL	SPI0_W
+
+	MOV		A,		#00101000b
+	ACALL	SPI0_W
+	
+	CLR		A
+	ACALL	SPI0_R
+	
+	SETB	P0.3
+	ACALL	Wait_short	
+	
+	CJNE	A,		#0x22,		Poll_Open
+	
+;Считываем. что происходит в регистре S1_RX_WR
+Wait_data:
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_RX_WR
+	ACALL	SPI0_W
+
+	MOV		A,		#00101000b
+	ACALL	SPI0_W
+	
+	CLR		A
+	ACALL	SPI0_R
+	
+	CLR		A
+	ACALL	SPI0_R
+	
+	SETB	P0.3
+	ACALL	Wait_short
+	
+	JZ		Wait_data
+	CJNE	A,		0x20,		New_data
+	SJMP	Wait_data
+
+
+New_data:
+	MOV		A,		0x20
+;Теперь читаем из регистра S1_RX_RD сами данные.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_RX_RD
+	ACALL	SPI0_W
+
+	MOV		A,		#00101000b
+	ACALL	SPI0_W
+	
+	CLR		A
+	ACALL	SPI0_R
+	MOV		R3,	A
+	
+	CLR		A
+	ACALL	SPI0_R
+	MOV		DPL,	A
+	
+	SETB	P0.3
+	ACALL	Wait_short
+
+
+
+
+
+
+
+
+
+
+SJMP Loop
 	
 	
 	
@@ -625,6 +732,8 @@ CSEG AT 0
 	
 	
 	
+	
+	SJMP	$
 	
 	
 $include (My_library_for_W5500.inc)
