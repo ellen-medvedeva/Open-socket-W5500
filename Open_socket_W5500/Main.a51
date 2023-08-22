@@ -1,13 +1,5 @@
 $include (c8051F120.inc)
 	
-PIN_RSTN	EQU		P2.0
-MR			EQU		0x0000
-GAR1		EQU		0x0001
-
-SUBR_ADRESS		EQU		0x0000
-SHAR_ADRESS		EQU		0x0000
-SIPR_ADRESS		EQU		0x0000
-	
 CSEG AT 0
 
 	CLR EA					; Запретить все прерывания
@@ -39,7 +31,7 @@ CSEG AT 0
 	MOV		SFRPAGE,	#0x00			
 	MOV		R1,			#0x10
 
-;Я так понимаю, неплохо было бы сбросить перед всеми процедурами контроллер.
+;00. Я так понимаю, неплохо было бы сбросить перед всеми процедурами контроллер.
 	CLR		PIN_RSTN
 	ACALL	Wait_long
 	SETB	PIN_RSTN
@@ -47,87 +39,212 @@ CSEG AT 0
 	ACALL	Wait_long		;Теперь ждем, пока напряжение появится.
 
 
-Loop:
-	INC		R1
-;1. Попробуем записать какое-нибудь значение в какой-нибудь регистр, а потом считать его.
-	;CLR		NSSMD0
+;1. Будем настраивать Common Register Block.
+;1.1. Настраиваем регистр MR.
 	CLR		P0.3
 	ACALL	Wait_short
 	
 	CLR		A
 	ACALL	SPI0_W
 ;Пусть нашей жертвой будет регистр MR. Он имеет смещение 0x0000.
-	CLR		A
+	MOV		A,		#MR
 	ACALL	SPI0_W
 ;Дальше передаем Control Phase. В нашем случае 0x00 (согласно стр. 20), 1 (т.е. write), 00.
 	MOV		A,		#00000100b
 	ACALL	SPI0_W
 ;Ну и сами данные.
-	MOV		A,		R1
+	MOV		A,		#10000000b
 	ACALL	SPI0_W
 	
-	;SETB	NSSMD0
 	SETB	P0.3
 	ACALL	Wait_short
-	
-	
-;2. А теперь посмотрим, что получилось. Т.е. прочитаем из регистра MR число.
-	;CLR		NSSMD0
+
+;1.2. Настраиваем регистр GAR.
 	CLR		P0.3
 	ACALL	Wait_short
 	
 	CLR		A
 	ACALL	SPI0_W
-	CLR		A
+
+	MOV		A,		#GAR1
+	ACALL	SPI0_W
+
+	MOV		A,		#00000100b
+	ACALL	SPI0_W
+
+	MOV		A,		#0xC0
 	ACALL	SPI0_W
 	
-	MOV		A,		#00000000b
+	MOV		A,		#0xA8
 	ACALL	SPI0_W
 	
-	ACALL	SPI0_R
+	MOV		A,		#0x14
+	ACALL	SPI0_W
 	
-	;SETB	NSSMD0
+	MOV		A,		#0x00
+	ACALL	SPI0_W
+	
 	SETB	P0.3
 	ACALL	Wait_short
 
-SJMP	Loop
 
-
-SPI0_W:
-		MOV		SPI0DAT,	A
-
-poll_SPIF_w:
-	JNB		SPIF,		poll_SPIF_w	
-	CLR		SPIF
-RET
-
-
-SPI0_R:
-	MOV		SPI0DAT,	A
-
-poll_SPIF_r:
-	JNB		SPIF,		poll_SPIF_r		
-	CLR		SPIF
-
-	MOV		A,			SPI0DAT
+;1.3. Настраиваем регистр SUBR.
+	CLR		P0.3
 	ACALL	Wait_short
-RET
-
-
-Wait_short:
-	MOV		R0,			#100
-	Wait_sh:
-		DJNZ	R0,			Wait_sh
-RET
-
-Wait_long:
-	MOV		R0,		#0
-	MOV		R1,		#0
 	
-	Wait_ln:
-		DJNZ	R0,		Wait_ln
-		DJNZ	R1,		Wait_ln
-RET
+	CLR		A
+	ACALL	SPI0_W
 
+	MOV		A,		#SUBR1
+	ACALL	SPI0_W
+
+	MOV		A,		#00000100b
+	ACALL	SPI0_W
+
+	MOV		A,		#0xFF
+	ACALL	SPI0_W
+	
+	MOV		A,		#0xFF
+	ACALL	SPI0_W
+	
+	MOV		A,		#0xFF
+	ACALL	SPI0_W
+	
+	MOV		A,		#0x00
+	ACALL	SPI0_W
+	
+	SETB	P0.3
+	ACALL	Wait_short
+
+
+;1.4. Настраиваем регистр SHAR.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#SHAR1
+	ACALL	SPI0_W
+
+	MOV		A,		#00000100b
+	ACALL	SPI0_W
+
+	MOV		A,		#0x70
+	ACALL	SPI0_W
+	
+	MOV		A,		#0xFF
+	ACALL	SPI0_W
+	
+	MOV		A,		#0x76
+	ACALL	SPI0_W
+	
+	MOV		A,		#0x1C
+	ACALL	SPI0_W
+	
+	MOV		A,		#0xC0
+	ACALL	SPI0_W
+	
+	MOV		A,		#0x67
+	ACALL	SPI0_W
+	
+	SETB	P0.3
+	ACALL	Wait_short
+
+
+;1.5. Настраиваем регистр SIPR.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#SIPR1
+	ACALL	SPI0_W
+
+	MOV		A,		#00000100b
+	ACALL	SPI0_W
+
+	MOV		A,		#0xC0
+	ACALL	SPI0_W
+	
+	MOV		A,		#0xA8
+	ACALL	SPI0_W
+	
+	MOV		A,		#0x14
+	ACALL	SPI0_W
+	
+	MOV		A,		#0x01
+	ACALL	SPI0_W
+	
+	SETB	P0.3
+	ACALL	Wait_short
+
+
+;1.6. Настраиваем регистр RTR.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#RTR1
+	ACALL	SPI0_W
+
+	MOV		A,		#00000100b
+	ACALL	SPI0_W
+
+	MOV		A,		#0x07
+	ACALL	SPI0_W
+	
+	MOV		A,		#0xD0
+	ACALL	SPI0_W
+	
+	SETB	P0.3
+	ACALL	Wait_short
+
+
+;1.7. Настраиваем регистр RCR.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#RCR1
+	ACALL	SPI0_W
+
+	MOV		A,		#00000100b
+	ACALL	SPI0_W
+
+	MOV		A,		#0x0A
+	ACALL	SPI0_W
+	
+	SETB	P0.3
+	ACALL	Wait_short
+
+
+
+;Прочитаем что-нибудь:
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+	
+	MOV		A,		#0x0B
+	ACALL	SPI0_W
+
+	MOV		A,		#00000000b
+	ACALL	SPI0_W
+
+	CLR		A
+	ACALL	SPI0_R
+	
+	SETB	P0.3
+	ACALL	Wait_short
+
+
+$include (My_library_for_W5500.inc)
 
 END
