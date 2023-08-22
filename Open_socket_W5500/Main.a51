@@ -49,7 +49,7 @@ CSEG AT 0
 ;Пусть нашей жертвой будет регистр MR. Он имеет смещение 0x0000.
 	MOV		A,		#MR
 	ACALL	SPI0_W
-;Дальше передаем Control Phase. В нашем случае 0x00 (согласно стр. 20), 1 (т.е. write), 00.
+;Дальше передаем Control Phase. В нашем случае 0x00 (согласно стр. 29), 1 (т.е. write), 00.
 	MOV		A,		#00000100b
 	ACALL	SPI0_W
 ;Ну и сами данные.
@@ -222,29 +222,411 @@ CSEG AT 0
 	
 	SETB	P0.3
 	ACALL	Wait_short
+;-------------------------------------------------------------
 
 
+;2. Делаем общие настройки 1 сокета и некоторые настройки других сокетов.
+;2.1. Настраиваем регистр S1_MR.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
 
+	MOV		A,		#S1_MR
+	ACALL	SPI0_W
+
+	MOV		A,		#00101100b
+	ACALL	SPI0_W
+
+	MOV		A,		#01000010b
+	ACALL	SPI0_W
+	
+	SETB	P0.3
+	ACALL	Wait_short
+
+;2.2. Настраиваем регистр S1_PORT.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_PORT
+	ACALL	SPI0_W
+
+	MOV		A,		#00101100b
+	ACALL	SPI0_W
+
+	MOV		A,		#0x08
+	ACALL	SPI0_W
+	
+	MOV		A,		#0x34
+	ACALL	SPI0_W
+	
+	SETB	P0.3
+	ACALL	Wait_short
+
+;2.3. Настраиваем регистр S1_TTL.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_TTL
+	ACALL	SPI0_W
+
+	MOV		A,		#00101100b
+	ACALL	SPI0_W
+
+	MOV		A,		#0x01
+	ACALL	SPI0_W
+	
+	SETB	P0.3
+	ACALL	Wait_short
+	
+;2.4. Настраиваем регистр S1_RXBUF_SIZE.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_RXBUF_SIZE
+	ACALL	SPI0_W
+
+	MOV		A,		#00101100b
+	ACALL	SPI0_W
+
+	MOV		A,		#0x04
+	ACALL	SPI0_W
+	
+	SETB	P0.3
+	ACALL	Wait_short
+	
+;2.5. Настраиваем регистр S1_TXBUF_SIZE.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_TXBUF_SIZE
+	ACALL	SPI0_W
+
+	MOV		A,		#00101100b
+	ACALL	SPI0_W
+
+	MOV		A,		#0x02
+	ACALL	SPI0_W
+		
+	SETB	P0.3
+	ACALL	Wait_short
+;----------------------------------------------------------------
+
+;3. А теперь настроим размеры буферов для остальных сокетов.
+;3.1.1. Настраиваем регистр S0_RXBUF_SIZE.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_RXBUF_SIZE
+	ACALL	SPI0_W
+
+	MOV		A,		#00001100b
+	ACALL	SPI0_W
+
+	MOV		A,		#0x00
+	ACALL	SPI0_W
+	
+	SETB	P0.3
+	ACALL	Wait_short
+	
+;3.1.2. Настраиваем регистр S0_TXBUF_SIZE.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_TXBUF_SIZE
+	ACALL	SPI0_W
+
+	MOV		A,		#00001100b
+	ACALL	SPI0_W
+
+	MOV		A,		#0x00
+	ACALL	SPI0_W
+		
+	SETB	P0.3
+	ACALL	Wait_short
+
+;3.2.1. Настраиваем регистр S2_RXBUF_SIZE.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_RXBUF_SIZE
+	ACALL	SPI0_W
+
+	MOV		A,		#01010100b
+	ACALL	SPI0_W
+
+	MOV		A,		#0x00
+	ACALL	SPI0_W
+	
+	SETB	P0.3
+	ACALL	Wait_short
+	
+;3.2.2. Настраиваем регистр S2_TXBUF_SIZE.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_TXBUF_SIZE
+	ACALL	SPI0_W
+
+	MOV		A,		#01010100b
+	ACALL	SPI0_W
+
+	MOV		A,		#0x00
+	ACALL	SPI0_W
+		
+	SETB	P0.3
+	ACALL	Wait_short
+	
+;3.3.1. Настраиваем регистр S3_RXBUF_SIZE.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_RXBUF_SIZE
+	ACALL	SPI0_W
+
+	MOV		A,		#01101100b
+	ACALL	SPI0_W
+
+	MOV		A,		#0x04
+	ACALL	SPI0_W
+	
+	SETB	P0.3
+	ACALL	Wait_short
+	
+;3.3.2. Настраиваем регистр S3_TXBUF_SIZE.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_TXBUF_SIZE
+	ACALL	SPI0_W
+
+	MOV		A,		#01101100b
+	ACALL	SPI0_W
+
+	MOV		A,		#0x08
+	ACALL	SPI0_W
+		
+	SETB	P0.3
+	ACALL	Wait_short
+	
+;3.4.1. Настраиваем регистр S4_RXBUF_SIZE.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_RXBUF_SIZE
+	ACALL	SPI0_W
+
+	MOV		A,		#10001100b
+	ACALL	SPI0_W
+
+	MOV		A,		#0x02
+	ACALL	SPI0_W
+	
+	SETB	P0.3
+	ACALL	Wait_short
+	
+;3.4.2. Настраиваем регистр S4_TXBUF_SIZE.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_TXBUF_SIZE
+	ACALL	SPI0_W
+
+	MOV		A,		#10001100b
+	ACALL	SPI0_W
+
+	MOV		A,		#0x02
+	ACALL	SPI0_W
+		
+	SETB	P0.3
+	ACALL	Wait_short
+	
+;3.5.1. Настраиваем регистр S5_RXBUF_SIZE.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_RXBUF_SIZE
+	ACALL	SPI0_W
+
+	MOV		A,		#10101100b
+	ACALL	SPI0_W
+
+	MOV		A,		#0x00
+	ACALL	SPI0_W
+	
+	SETB	P0.3
+	ACALL	Wait_short
+	
+;3.5.2. Настраиваем регистр S5_TXBUF_SIZE.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_TXBUF_SIZE
+	ACALL	SPI0_W
+
+	MOV		A,		#10101100b
+	ACALL	SPI0_W
+
+	MOV		A,		#0x00
+	ACALL	SPI0_W
+		
+	SETB	P0.3
+	ACALL	Wait_short
+
+;3.6.1. Настраиваем регистр S6_RXBUF_SIZE.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_RXBUF_SIZE
+	ACALL	SPI0_W
+
+	MOV		A,		#11001100b
+	ACALL	SPI0_W
+
+	MOV		A,		#0x00
+	ACALL	SPI0_W
+	
+	SETB	P0.3
+	ACALL	Wait_short
+	
+;3.6.2. Настраиваем регистр S6_TXBUF_SIZE.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_TXBUF_SIZE
+	ACALL	SPI0_W
+
+	MOV		A,		#11001100b
+	ACALL	SPI0_W
+
+	MOV		A,		#0x00
+	ACALL	SPI0_W
+		
+	SETB	P0.3
+	ACALL	Wait_short
+	
+;3.7.1. Настраиваем регистр S7_RXBUF_SIZE.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_RXBUF_SIZE
+	ACALL	SPI0_W
+
+	MOV		A,		#11101100b
+	ACALL	SPI0_W
+
+	MOV		A,		#0x02
+	ACALL	SPI0_W
+	
+	SETB	P0.3
+	ACALL	Wait_short
+	
+;3.7.2. Настраиваем регистр S7_TXBUF_SIZE.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_TXBUF_SIZE
+	ACALL	SPI0_W
+
+	MOV		A,		#11101100b
+	ACALL	SPI0_W
+
+	MOV		A,		#0x04
+	ACALL	SPI0_W
+		
+	SETB	P0.3
+	ACALL	Wait_short
+	
+	
+	
+	
 ;Прочитаем что-нибудь:
 	CLR		P0.3
 	ACALL	Wait_short
 	
 	CLR		A
 	ACALL	SPI0_W
+
+	MOV		A,		#S1_TXBUF_SIZE
+	ACALL	SPI0_W
+
+	MOV		A,		#11101000b
+	ACALL	SPI0_W
 	
-	MOV		A,		#0x0B
-	ACALL	SPI0_W
-
-	MOV		A,		#00000000b
-	ACALL	SPI0_W
-
 	CLR		A
 	ACALL	SPI0_R
 	
 	SETB	P0.3
 	ACALL	Wait_short
-
-
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 $include (My_library_for_W5500.inc)
 
 END
