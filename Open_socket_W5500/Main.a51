@@ -633,7 +633,7 @@ CSEG AT 0
 	ACALL	Wait_short
 	
 	
-Loop:
+
 Poll_Open:
 ;Теперь в статусе мы дожны увидеть 0x22.
 	CLR		P0.3
@@ -656,7 +656,10 @@ Poll_Open:
 	
 	CJNE	A,		#0x22,		Poll_Open
 	
-;Считываем. что происходит в регистре S1_RX_WR
+	MOV		0x20,		#0
+	MOV		0x21,		#0
+;Loop:	
+;Считываем, что происходит в регистре S1_RX_WR
 Wait_data:
 	CLR		P0.3
 	ACALL	Wait_short
@@ -672,40 +675,59 @@ Wait_data:
 	
 	CLR		A
 	ACALL	SPI0_R
+	MOV		0x22,		A		;Запоминаем текущие значения
 	
 	CLR		A
 	ACALL	SPI0_R
+	MOV		0x23,		A		;Запоминаем текущие значения
 	
 	SETB	P0.3
 	ACALL	Wait_short
+
+
+	MOV		A,		0x22
+	JNZ		High_byte_change
+	MOV		A,		0x23
+	JNZ		Least_byte_change
+	LJMP	Wait_data
 	
-	JZ		Wait_data
-	CJNE	A,		0x20,		New_data
-	SJMP	Wait_data
+	High_byte_change:
+		MOV		A,		0x22
+		CJNE	A,		0x20,		Read_data
+		LJMP	Least_byte_change
+	
+	Least_byte_change:
+		MOV		A,		0x23
+		CJNE	A,		0x21,		Read_data	
+		LJMP	High_byte_change
+		
+	Read_data:
+		MOV		0x20,		0x22
+		MOV		0x21,		0x23	
+;Вполне вероятно, что это адрес в буфере Rx сокета.
+		MOV		DPH,		0x20
+		MOV		DPL,		0x21
+;LJMP Loop
 
 
-New_data:
-	MOV		A,		0x20
-;Теперь читаем из регистра S1_RX_RD сами данные.
+; Теперь перейдем по этому адресу и считаем 2 байта.
 	CLR		P0.3
 	ACALL	Wait_short
 	
-	CLR		A
+	MOV		A,		0x20
 	ACALL	SPI0_W
 
-	MOV		A,		#S1_RX_RD
+	MOV		A,		0x21
 	ACALL	SPI0_W
 
-	MOV		A,		#00101000b
+	MOV		A,		#00111000b
 	ACALL	SPI0_W
 	
 	CLR		A
 	ACALL	SPI0_R
-	MOV		R3,	A
 	
 	CLR		A
 	ACALL	SPI0_R
-	MOV		DPL,	A
 	
 	SETB	P0.3
 	ACALL	Wait_short
@@ -719,9 +741,11 @@ New_data:
 
 
 
-SJMP Loop
-	
-	
+
+
+
+
+
 	
 	
 	
