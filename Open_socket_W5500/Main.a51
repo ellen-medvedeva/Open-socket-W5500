@@ -656,10 +656,6 @@ Poll_Open:
 	
 	CJNE	A,		#0x22,		Poll_Open
 	
-	MOV		DPH,	#0x00
-	MOV		DPL,	#0x06
-
-
 
 ;Дождемся, пока на сокете 1 произойдет прерывание.
 Wait_for_an_interrupt:
@@ -669,10 +665,10 @@ Wait_for_an_interrupt:
 	CLR		A
 	ACALL	SPI0_W
 
-	MOV		A,		#SIR
+	MOV		A,		#S1_IR
 	ACALL	SPI0_W
 
-	MOV		A,		#00000000b
+	MOV		A,		#00101000b
 	ACALL	SPI0_W
 
 	CLR		A
@@ -681,7 +677,7 @@ Wait_for_an_interrupt:
 	SETB	P0.3
 	ACALL	Wait_short
 	
-	JNB 	ACC.1,	Wait_for_an_interrupt	;	Переход, если бит равен нулю.
+	JNB 	ACC.2,	Wait_for_an_interrupt	;	Переход, если бит равен нулю.
 
 ;Обнуляем флажок.
 	CLR		P0.3
@@ -690,13 +686,13 @@ Wait_for_an_interrupt:
 	CLR		A
 	ACALL	SPI0_W
 
-	MOV		A,		#SIR
+	MOV		A,		#S1_IR
+	ACALL	SPI0_W
+
+	MOV		A,		#00101100b
 	ACALL	SPI0_W
 
 	MOV		A,		#00000100b
-	ACALL	SPI0_W
-
-	MOV		A,		#00000000b
 	ACALL	SPI0_W
 		
 	SETB	P0.3
@@ -704,55 +700,13 @@ Wait_for_an_interrupt:
 
 ;Проверяем, что флажок обнулился.
 Flag_clearance_check:
-	JB 		ACC.1,	Flag_clearance_check		;	Переход, если бит равен единице.
-
-;Переходим в буфер RX сокета 1 и считываем сначала длину сообщения.
-	CLR		P0.3
-	ACALL	Wait_short
-	
-	MOV		A,		DPH
-	ACALL	SPI0_W
-
-	MOV		A,		DPL
-	ACALL	SPI0_W
-
-
-;Вот это важный шаг, только пока непонятно, куда его поставить.
-	MOV 	A, 		DPL
-	CLR 	C
-	ADDC 	A, 		0x21
-	MOV 	DPL,	 A
-
-	MOV 	A, 		DPH
-	ADDC 	A, 		0x20
-	MOV 	DPH,	 A	
-	
-	
-	
-	MOV		A,		#00111000b
-	ACALL	SPI0_W
-
-	CLR		A
-	ACALL	SPI0_R
-	MOV		0x20,	A
-	
-	CLR		A
-	ACALL	SPI0_R
-	MOV		0x21,	A
-
-	SETB	P0.3
-	ACALL	Wait_short
-	
-
-;Пока с длиной ничего не случилось, меняем указатель чтения.
-;Сначала читаем текущее значение.
 	CLR		P0.3
 	ACALL	Wait_short
 	
 	CLR		A
 	ACALL	SPI0_W
 
-	MOV		A,		#S1_RX_RD
+	MOV		A,		#S1_IR
 	ACALL	SPI0_W
 
 	MOV		A,		#00101000b
@@ -760,26 +714,14 @@ Flag_clearance_check:
 
 	CLR		A
 	ACALL	SPI0_R
-	MOV		0x22,	A
-	
-	CLR		A
-	ACALL	SPI0_R
-	MOV		0x23,	A
-
+		
 	SETB	P0.3
 	ACALL	Wait_short
+	
+	JB 		ACC.2,	Flag_clearance_check		;	Переход, если бит равен единице.
 
-;Складываем текущее значение регистра с длинной сообщения.
-	MOV 	A, 		0x23
-	CLR 	C
-	ADDC 	A, 		0x21
-	MOV 	0x23,	 A
 
-	MOV 	A, 		0x22
-	ADDC 	A, 		0x20
-	MOV 	0x22,	 A
-
-;Записываем получившееся число обратно в регистр.
+;Сейчас мне хочется понять, что будет в регистре S1_RX_RD. В общем, счиатем его. Т.е. извлекаем положение уяказателя чтения.
 	CLR		P0.3
 	ACALL	Wait_short
 	
@@ -789,69 +731,137 @@ Flag_clearance_check:
 	MOV		A,		#S1_RX_RD
 	ACALL	SPI0_W
 
-	MOV		A,		#00101100b
+	MOV		A,		#00101000b		;Внимание, мы считываем регистры!
 	ACALL	SPI0_W
 
-	MOV 	A,	 0x22
-	ACALL	SPI0_W
-	
-	MOV 	A,	 0x23
-	ACALL	SPI0_W
+	CLR		A
+	ACALL	SPI0_R
+	MOV		DPH,	A
+
+	CLR		A
+	ACALL	SPI0_R
+	MOV		DPL,	A
 
 	SETB	P0.3
 	ACALL	Wait_short
-	
 
-;А теперь считываем сами данные.
-	CLR		P0.3
-	ACALL	Wait_short
-	
-	MOV		R3,		#2
-Inc_len:
+;Понимам, с какого адреса стоит начинать считывать длинну данных.
+;Надо как-то корректно прибавить 6.
 	MOV 	A, 		DPL
 	CLR 	C
-	ADDC 	A, 		#1
+	ADDC 	A, 		#6
 	MOV 	DPL,	 A
 
 	MOV 	A, 		DPH
 	SUBB 	A, 		#0
 	MOV 	DPH,	 A
-	DJNZ	R3,		Inc_len
+
+	
+;Считываем длинну данных.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	MOV 	A, 		DPH
+	ACALL	SPI0_W
+
+	MOV 	A, 		DPL
+	ACALL	SPI0_W
+
+	MOV		A,		#00111000b		
+	ACALL	SPI0_W
+
+	CLR		A
+	ACALL	SPI0_R
+	MOV		R2,		A
+	
+	CLR		A
+	ACALL	SPI0_R
+	MOV		R3,		A
+		
+	SETB	P0.3
+	ACALL	Wait_short
+	
+;Теперь начинаем считывать данные и отслеживать, сколько их считалось.
+	MOV 	A, 		DPL
+	CLR 	C
+	ADDC 	A, 		#2
+	MOV 	DPL,	 A
+
+	MOV 	A, 		DPH
+	ADDC 	A, 		#0
+	MOV 	DPH,	 A
+	
+;Непосредственно считываем байты данных.
+Read_1_byte:
+	CLR		P0.3
+	ACALL	Wait_short
 	
 	MOV		A,		DPH
 	ACALL	SPI0_W
-	
+
 	MOV		A,		DPL
 	ACALL	SPI0_W
 
 	MOV		A,		#00111000b
 	ACALL	SPI0_W
 
-Data_reading:
 	CLR		A
 	ACALL	SPI0_R
+		
+	SETB	P0.3
+	ACALL	Wait_short
 	
-	MOV		R3,		A
-;Декремент длинны сообщения.
-	MOV 	A, 		0x21
+;Декремент длинны.
+	MOV 	A, 		R3
 	CLR 	C
 	SUBB 	A, 		#1
-	MOV 	0x21,	 A
+	MOV 	R3,	 A
 
-	MOV 	A, 		0x20
+	MOV 	A, 		R2
 	SUBB 	A, 		#0
-	MOV 	0x20,	A
+	MOV 	R2,		A
 
-;Сообщение закончилось?
-	MOV		A,		0x20
-	ORL		A,		0x21
+;Проверяем, закончились ли данные? Сделаем логическое "ИЛИ" аккумулятора и регистра.
+	MOV 	A, 		DPL
+	CLR 	C
+	ADDC 	A, 		#1
+	MOV 	DPL,	 A
 
-	JNZ		Data_reading
+	MOV 	A, 		DPH
+	ADDC 	A, 		#0
+	MOV 	DPH,	 A
 	
+	MOV		A,		R2
+	ORL		A,		R3
+	
+	JZ		Data_has_run_out		;Переход, если аккумулятор равен 0.
+	
+	LJMP	Read_1_byte
+
+Data_has_run_out:
+;Обновляем регистр S1_RX_RD.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_RX_RD
+	ACALL	SPI0_W
+
+	MOV		A,		#00101100b		
+	ACALL	SPI0_W
+
+	MOV 	A, 		DPH
+	ACALL	SPI0_W
+
+	MOV 	A, 		DPL
+	ACALL	SPI0_W
+
 	SETB	P0.3
 	ACALL	Wait_short
 
-;Даем команду, что прием данных закончен. Т.е. передадим в S1_CR команду RECV.
+;Теперь даем команду, что прием обслужен.
 	CLR		P0.3
 	ACALL	Wait_short
 	
@@ -859,21 +869,20 @@ Data_reading:
 	ACALL	SPI0_W
 
 	MOV		A,		#S1_CR
-
-	MOV		A,		#00101100b
 	ACALL	SPI0_W
 
-	MOV 	A,	 	#0x40
+	MOV		A,		#00101100b		
+	ACALL	SPI0_W
+
+	MOV 	A, 		#0x40 
 	ACALL	SPI0_W
 
 	SETB	P0.3
 	ACALL	Wait_short
-	
-	LJMP	Wait_for_an_interrupt
-	
-	
-	
-	SJMP	$
+
+LJMP	Wait_for_an_interrupt
+
+
 	
 	
 $include (My_library_for_W5500.inc)
