@@ -1,4 +1,4 @@
-A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 12:54:51 PAGE     1
+A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 17:57:01 PAGE     1
 
 
 MACRO ASSEMBLER A51 V8.02b
@@ -65,7 +65,7 @@ LOC  OBJ            LINE     SOURCE
   0098          +1    56     SCON0          DATA 098H    ; UART 0 CONTROL
   0098          +1    57     SCON1          DATA 098H    ; UART 1 CONTROL
   0099          +1    58     SBUF0          DATA 099H    ; UART 0 DATA BUFFER
-A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 12:54:51 PAGE     2
+A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 17:57:01 PAGE     2
 
   0099          +1    59     SBUF1          DATA 099H    ; UART 1 DATA BUFFER
   009A          +1    60     SPI0CFG        DATA 09AH    ; SPI CONFIGURATION
@@ -133,7 +133,7 @@ LOC  OBJ            LINE     SOURCE
   00CB          +1   122     RCAP3H         DATA 0CBH    ; TIMER 3 CAPTURE/RELOAD HIGH BYTE
   00CB          +1   123     RCAP4H         DATA 0CBH    ; TIMER/COUNTER 4 CAPTURE/RELOAD HIGH BYTE
   00CC          +1   124     TMR2L          DATA 0CCH    ; TIMER/COUNTER 2 LOW BYTE
-A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 12:54:51 PAGE     3
+A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 17:57:01 PAGE     3
 
   00CC          +1   125     TMR3L          DATA 0CCH    ; TIMER 3 LOW BYTE
   00CC          +1   126     TMR4L          DATA 0CCH    ; TIMER/COUNTER 4 LOW BYTE
@@ -201,7 +201,7 @@ LOC  OBJ            LINE     SOURCE
   008D          +1   188     TF0            BIT 08DH     ; TIMER 0 OVERFLOW FLAG
   008C          +1   189     TR0            BIT 08CH     ; TIMER 0 ON/OFF CONTROL
   008B          +1   190     IE1            BIT 08BH     ; EXT. INTERRUPT 1 EDGE FLAG
-A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 12:54:51 PAGE     4
+A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 17:57:01 PAGE     4
 
   008A          +1   191     IT1            BIT 08AH     ; EXT. INTERRUPT 1 TYPE
   0089          +1   192     IE0            BIT 089H     ; EXT. INTERRUPT 0 EDGE FLAG
@@ -269,7 +269,7 @@ LOC  OBJ            LINE     SOURCE
                 +1   254     ; SMB0CN 0C0H
   00C7          +1   255     BUSY           BIT 0C7H     ; SMBUS 0 BUSY
   00C6          +1   256     ENSMB          BIT 0C6H     ; SMBUS 0 ENABLE
-A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 12:54:51 PAGE     5
+A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 17:57:01 PAGE     5
 
   00C5          +1   257     STA            BIT 0C5H     ; SMBUS 0 START FLAG
   00C4          +1   258     STO            BIT 0C4H     ; SMBUS 0 STOP FLAG
@@ -337,7 +337,7 @@ LOC  OBJ            LINE     SOURCE
   00EA          +1   320     AD0CM0         BIT 0EAH     ; ADC 0 CONVERT START MODE BIT 0
   00E9          +1   321     AD0WINT        BIT 0E9H     ; ADC 0 WINDOW INTERRUPT FLAG
   00E8          +1   322     AD0LJST        BIT 0E8H     ; ADC 0 LEFT JUSTIFY DATA BIT
-A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 12:54:51 PAGE     6
+A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 17:57:01 PAGE     6
 
                 +1   323     
                 +1   324     ; ADC2CN 0E8H
@@ -405,7 +405,7 @@ LOC  OBJ            LINE     SOURCE
 0014 759D01          383             MOV             SPI0CKR,        #1                      
 0017 759A40          384             MOV             SPI0CFG,        #01000000b      ;Включаем ведущий режим.
 001A 75F801          385             MOV             SPI0CN,         #00000001b      ;Включаем модуль SPI0.
-A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 12:54:51 PAGE     7
+A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 17:57:01 PAGE     7
 
                      386             
 001D 75840F          387             MOV             SFRPAGE,        #0x0F           ;Стр. "F".
@@ -424,1174 +424,1292 @@ LOC  OBJ            LINE     SOURCE
                      400     
                      401     ;00. Я так понимаю, неплохо было бы сбросить перед всеми процедурами контроллер.
 0037 C2A0            402             CLR             PIN_RSTN
-0039 7186            403             ACALL   Wait_long
+0039 911F            403             ACALL   Wait_long
 003B D2A0            404             SETB    PIN_RSTN
                      405     
-003D 7186            406             ACALL   Wait_long               ;Теперь ждем, пока напряжение появится.
+003D 911F            406             ACALL   Wait_long               ;Теперь ждем, пока напряжение появится.
                      407     
                      408     
                      409     ;1. Будем настраивать Common Register Block.
                      410     ;1.1. Настраиваем регистр MR.
 003F C283            411             CLR             P0.3
-0041 7181            412             ACALL   Wait_short
+0041 911A            412             ACALL   Wait_short
                      413             
 0043 E4              414             CLR             A
-0044 719B            415             ACALL   SPI0_W
+0044 9134            415             ACALL   SPI0_W
                      416     ;Пусть нашей жертвой будет регистр MR. Он имеет смещение 0x0000.
 0046 7400            417             MOV             A,              #MR
-0048 719B            418             ACALL   SPI0_W
+0048 9134            418             ACALL   SPI0_W
                      419     ;Дальше передаем Control Phase. В нашем случае 0x00 (согласно стр. 29), 1 (т.е. write), 00.
 004A 7404            420             MOV             A,              #00000100b
-004C 719B            421             ACALL   SPI0_W
+004C 9134            421             ACALL   SPI0_W
                      422     ;Ну и сами данные.
 004E 7480            423             MOV             A,              #10000000b
-0050 719B            424             ACALL   SPI0_W
+0050 9134            424             ACALL   SPI0_W
                      425             
 0052 D283            426             SETB    P0.3
-0054 7181            427             ACALL   Wait_short
+0054 911A            427             ACALL   Wait_short
                      428     
                      429     ;1.2. Настраиваем регистр GAR.
 0056 C283            430             CLR             P0.3
-0058 7181            431             ACALL   Wait_short
+0058 911A            431             ACALL   Wait_short
                      432             
 005A E4              433             CLR             A
-005B 719B            434             ACALL   SPI0_W
+005B 9134            434             ACALL   SPI0_W
                      435     
 005D 7401            436             MOV             A,              #GAR1
-005F 719B            437             ACALL   SPI0_W
+005F 9134            437             ACALL   SPI0_W
                      438     
 0061 7404            439             MOV             A,              #00000100b
-0063 719B            440             ACALL   SPI0_W
+0063 9134            440             ACALL   SPI0_W
                      441     
 0065 74C0            442             MOV             A,              #0xC0
-0067 719B            443             ACALL   SPI0_W
+0067 9134            443             ACALL   SPI0_W
                      444             
 0069 74A8            445             MOV             A,              #0xA8
-006B 719B            446             ACALL   SPI0_W
+006B 9134            446             ACALL   SPI0_W
                      447             
 006D 7414            448             MOV             A,              #0x14
-006F 719B            449             ACALL   SPI0_W
+006F 9134            449             ACALL   SPI0_W
                      450             
 0071 7400            451             MOV             A,              #0x00
-A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 12:54:51 PAGE     8
+A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 17:57:01 PAGE     8
 
-0073 719B            452             ACALL   SPI0_W
+0073 9134            452             ACALL   SPI0_W
                      453             
 0075 D283            454             SETB    P0.3
-0077 7181            455             ACALL   Wait_short
+0077 911A            455             ACALL   Wait_short
                      456     
                      457     
                      458     ;1.3. Настраиваем регистр SUBR.
 0079 C283            459             CLR             P0.3
-007B 7181            460             ACALL   Wait_short
+007B 911A            460             ACALL   Wait_short
                      461             
 007D E4              462             CLR             A
-007E 719B            463             ACALL   SPI0_W
+007E 9134            463             ACALL   SPI0_W
                      464     
 0080 7405            465             MOV             A,              #SUBR1
-0082 719B            466             ACALL   SPI0_W
+0082 9134            466             ACALL   SPI0_W
                      467     
 0084 7404            468             MOV             A,              #00000100b
-0086 719B            469             ACALL   SPI0_W
+0086 9134            469             ACALL   SPI0_W
                      470     
 0088 74FF            471             MOV             A,              #0xFF
-008A 719B            472             ACALL   SPI0_W
+008A 9134            472             ACALL   SPI0_W
                      473             
 008C 74FF            474             MOV             A,              #0xFF
-008E 719B            475             ACALL   SPI0_W
+008E 9134            475             ACALL   SPI0_W
                      476             
 0090 74FF            477             MOV             A,              #0xFF
-0092 719B            478             ACALL   SPI0_W
+0092 9134            478             ACALL   SPI0_W
                      479             
 0094 7400            480             MOV             A,              #0x00
-0096 719B            481             ACALL   SPI0_W
+0096 9134            481             ACALL   SPI0_W
                      482             
 0098 D283            483             SETB    P0.3
-009A 7181            484             ACALL   Wait_short
+009A 911A            484             ACALL   Wait_short
                      485     
                      486     
                      487     ;1.4. Настраиваем регистр SHAR.
 009C C283            488             CLR             P0.3
-009E 7181            489             ACALL   Wait_short
+009E 911A            489             ACALL   Wait_short
                      490             
 00A0 E4              491             CLR             A
-00A1 719B            492             ACALL   SPI0_W
+00A1 9134            492             ACALL   SPI0_W
                      493     
 00A3 7409            494             MOV             A,              #SHAR1
-00A5 719B            495             ACALL   SPI0_W
+00A5 9134            495             ACALL   SPI0_W
                      496     
 00A7 7404            497             MOV             A,              #00000100b
-00A9 719B            498             ACALL   SPI0_W
+00A9 9134            498             ACALL   SPI0_W
                      499     
 00AB 7470            500             MOV             A,              #0x70
-00AD 719B            501             ACALL   SPI0_W
+00AD 9134            501             ACALL   SPI0_W
                      502             
 00AF 74FF            503             MOV             A,              #0xFF
-00B1 719B            504             ACALL   SPI0_W
+00B1 9134            504             ACALL   SPI0_W
                      505             
 00B3 7476            506             MOV             A,              #0x76
-00B5 719B            507             ACALL   SPI0_W
+00B5 9134            507             ACALL   SPI0_W
                      508             
 00B7 741C            509             MOV             A,              #0x1C
-00B9 719B            510             ACALL   SPI0_W
+00B9 9134            510             ACALL   SPI0_W
                      511             
 00BB 74C0            512             MOV             A,              #0xC0
-00BD 719B            513             ACALL   SPI0_W
+00BD 9134            513             ACALL   SPI0_W
                      514             
 00BF 7467            515             MOV             A,              #0x67
-00C1 719B            516             ACALL   SPI0_W
+00C1 9134            516             ACALL   SPI0_W
                      517             
-A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 12:54:51 PAGE     9
+A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 17:57:01 PAGE     9
 
 00C3 D283            518             SETB    P0.3
-00C5 7181            519             ACALL   Wait_short
+00C5 911A            519             ACALL   Wait_short
                      520     
                      521     
                      522     ;1.5. Настраиваем регистр SIPR.
 00C7 C283            523             CLR             P0.3
-00C9 7181            524             ACALL   Wait_short
+00C9 911A            524             ACALL   Wait_short
                      525             
 00CB E4              526             CLR             A
-00CC 719B            527             ACALL   SPI0_W
+00CC 9134            527             ACALL   SPI0_W
                      528     
 00CE 740F            529             MOV             A,              #SIPR1
-00D0 719B            530             ACALL   SPI0_W
+00D0 9134            530             ACALL   SPI0_W
                      531     
 00D2 7404            532             MOV             A,              #00000100b
-00D4 719B            533             ACALL   SPI0_W
+00D4 9134            533             ACALL   SPI0_W
                      534     
 00D6 74C0            535             MOV             A,              #0xC0
-00D8 719B            536             ACALL   SPI0_W
+00D8 9134            536             ACALL   SPI0_W
                      537             
 00DA 74A8            538             MOV             A,              #0xA8
-00DC 719B            539             ACALL   SPI0_W
+00DC 9134            539             ACALL   SPI0_W
                      540             
 00DE 7414            541             MOV             A,              #0x14
-00E0 719B            542             ACALL   SPI0_W
+00E0 9134            542             ACALL   SPI0_W
                      543             
 00E2 7401            544             MOV             A,              #0x01
-00E4 719B            545             ACALL   SPI0_W
+00E4 9134            545             ACALL   SPI0_W
                      546             
 00E6 D283            547             SETB    P0.3
-00E8 7181            548             ACALL   Wait_short
+00E8 911A            548             ACALL   Wait_short
                      549     
                      550     
                      551     ;1.6. Настраиваем регистр RTR.
 00EA C283            552             CLR             P0.3
-00EC 7181            553             ACALL   Wait_short
+00EC 911A            553             ACALL   Wait_short
                      554             
 00EE E4              555             CLR             A
-00EF 719B            556             ACALL   SPI0_W
+00EF 9134            556             ACALL   SPI0_W
                      557     
 00F1 7419            558             MOV             A,              #RTR1
-00F3 719B            559             ACALL   SPI0_W
+00F3 9134            559             ACALL   SPI0_W
                      560     
 00F5 7404            561             MOV             A,              #00000100b
-00F7 719B            562             ACALL   SPI0_W
+00F7 9134            562             ACALL   SPI0_W
                      563     
 00F9 7407            564             MOV             A,              #0x07
-00FB 719B            565             ACALL   SPI0_W
+00FB 9134            565             ACALL   SPI0_W
                      566             
 00FD 74D0            567             MOV             A,              #0xD0
-00FF 719B            568             ACALL   SPI0_W
+00FF 9134            568             ACALL   SPI0_W
                      569             
 0101 D283            570             SETB    P0.3
-0103 7181            571             ACALL   Wait_short
+0103 911A            571             ACALL   Wait_short
                      572     
                      573     
                      574     ;1.7. Настраиваем регистр RCR.
 0105 C283            575             CLR             P0.3
-0107 7181            576             ACALL   Wait_short
+0107 911A            576             ACALL   Wait_short
                      577             
 0109 E4              578             CLR             A
-010A 719B            579             ACALL   SPI0_W
+010A 9134            579             ACALL   SPI0_W
                      580     
 010C 741B            581             MOV             A,              #RCR1
-010E 719B            582             ACALL   SPI0_W
+010E 9134            582             ACALL   SPI0_W
                      583     
-A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 12:54:51 PAGE    10
+A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 17:57:01 PAGE    10
 
 0110 7404            584             MOV             A,              #00000100b
-0112 719B            585             ACALL   SPI0_W
+0112 9134            585             ACALL   SPI0_W
                      586     
 0114 740A            587             MOV             A,              #0x0A
-0116 719B            588             ACALL   SPI0_W
+0116 9134            588             ACALL   SPI0_W
                      589             
 0118 D283            590             SETB    P0.3
-011A 7181            591             ACALL   Wait_short
+011A 911A            591             ACALL   Wait_short
                      592     ;-------------------------------------------------------------
                      593     
                      594     
                      595     ;2. Делаем общие настройки 1 сокета и некоторые настройки других сокетов.
                      596     ;2.1. Настраиваем регистр S1_MR.
 011C C283            597             CLR             P0.3
-011E 7181            598             ACALL   Wait_short
+011E 911A            598             ACALL   Wait_short
                      599             
 0120 E4              600             CLR             A
-0121 719B            601             ACALL   SPI0_W
+0121 9134            601             ACALL   SPI0_W
                      602     
 0123 7400            603             MOV             A,              #S1_MR
-0125 719B            604             ACALL   SPI0_W
+0125 9134            604             ACALL   SPI0_W
                      605     
 0127 742C            606             MOV             A,              #00101100b
-0129 719B            607             ACALL   SPI0_W
+0129 9134            607             ACALL   SPI0_W
                      608     
 012B 7442            609             MOV             A,              #01000010b
-012D 719B            610             ACALL   SPI0_W
+012D 9134            610             ACALL   SPI0_W
                      611             
 012F D283            612             SETB    P0.3
-0131 7181            613             ACALL   Wait_short
+0131 911A            613             ACALL   Wait_short
                      614     
                      615     ;2.2. Настраиваем регистр S1_PORT.
 0133 C283            616             CLR             P0.3
-0135 7181            617             ACALL   Wait_short
+0135 911A            617             ACALL   Wait_short
                      618             
 0137 E4              619             CLR             A
-0138 719B            620             ACALL   SPI0_W
+0138 9134            620             ACALL   SPI0_W
                      621     
 013A 7404            622             MOV             A,              #S1_PORT
-013C 719B            623             ACALL   SPI0_W
+013C 9134            623             ACALL   SPI0_W
                      624     
 013E 742C            625             MOV             A,              #00101100b
-0140 719B            626             ACALL   SPI0_W
+0140 9134            626             ACALL   SPI0_W
                      627     
 0142 7408            628             MOV             A,              #0x08
-0144 719B            629             ACALL   SPI0_W
+0144 9134            629             ACALL   SPI0_W
                      630             
 0146 7434            631             MOV             A,              #0x34
-0148 719B            632             ACALL   SPI0_W
+0148 9134            632             ACALL   SPI0_W
                      633             
 014A D283            634             SETB    P0.3
-014C 7181            635             ACALL   Wait_short
+014C 911A            635             ACALL   Wait_short
                      636     
                      637     ;2.3. Настраиваем регистр S1_TTL.
 014E C283            638             CLR             P0.3
-0150 7181            639             ACALL   Wait_short
+0150 911A            639             ACALL   Wait_short
                      640             
 0152 E4              641             CLR             A
-0153 719B            642             ACALL   SPI0_W
+0153 9134            642             ACALL   SPI0_W
                      643     
 0155 7416            644             MOV             A,              #S1_TTL
-0157 719B            645             ACALL   SPI0_W
+0157 9134            645             ACALL   SPI0_W
                      646     
 0159 742C            647             MOV             A,              #00101100b
-015B 719B            648             ACALL   SPI0_W
+015B 9134            648             ACALL   SPI0_W
                      649     
-A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 12:54:51 PAGE    11
+A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 17:57:01 PAGE    11
 
 015D 7401            650             MOV             A,              #0x01
-015F 719B            651             ACALL   SPI0_W
+015F 9134            651             ACALL   SPI0_W
                      652             
 0161 D283            653             SETB    P0.3
-0163 7181            654             ACALL   Wait_short
+0163 911A            654             ACALL   Wait_short
                      655             
                      656     ;2.4. Настраиваем регистр S1_RXBUF_SIZE.
 0165 C283            657             CLR             P0.3
-0167 7181            658             ACALL   Wait_short
+0167 911A            658             ACALL   Wait_short
                      659             
 0169 E4              660             CLR             A
-016A 719B            661             ACALL   SPI0_W
+016A 9134            661             ACALL   SPI0_W
                      662     
 016C 741E            663             MOV             A,              #S1_RXBUF_SIZE
-016E 719B            664             ACALL   SPI0_W
+016E 9134            664             ACALL   SPI0_W
                      665     
 0170 742C            666             MOV             A,              #00101100b
-0172 719B            667             ACALL   SPI0_W
+0172 9134            667             ACALL   SPI0_W
                      668     
 0174 7404            669             MOV             A,              #0x04
-0176 719B            670             ACALL   SPI0_W
+0176 9134            670             ACALL   SPI0_W
                      671             
 0178 D283            672             SETB    P0.3
-017A 7181            673             ACALL   Wait_short
+017A 911A            673             ACALL   Wait_short
                      674             
                      675     ;2.5. Настраиваем регистр S1_TXBUF_SIZE.
 017C C283            676             CLR             P0.3
-017E 7181            677             ACALL   Wait_short
+017E 911A            677             ACALL   Wait_short
                      678             
 0180 E4              679             CLR             A
-0181 719B            680             ACALL   SPI0_W
+0181 9134            680             ACALL   SPI0_W
                      681     
 0183 741F            682             MOV             A,              #S1_TXBUF_SIZE
-0185 719B            683             ACALL   SPI0_W
+0185 9134            683             ACALL   SPI0_W
                      684     
 0187 742C            685             MOV             A,              #00101100b
-0189 719B            686             ACALL   SPI0_W
+0189 9134            686             ACALL   SPI0_W
                      687     
 018B 7402            688             MOV             A,              #0x02
-018D 719B            689             ACALL   SPI0_W
+018D 9134            689             ACALL   SPI0_W
                      690                     
 018F D283            691             SETB    P0.3
-0191 7181            692             ACALL   Wait_short
+0191 911A            692             ACALL   Wait_short
                      693     ;----------------------------------------------------------------
                      694     
                      695     ;3. А теперь настроим размеры буферов для остальных сокетов.
                      696     ;3.1.1. Настраиваем регистр S0_RXBUF_SIZE.
 0193 C283            697             CLR             P0.3
-0195 7181            698             ACALL   Wait_short
+0195 911A            698             ACALL   Wait_short
                      699             
 0197 E4              700             CLR             A
-0198 719B            701             ACALL   SPI0_W
+0198 9134            701             ACALL   SPI0_W
                      702     
 019A 741E            703             MOV             A,              #S1_RXBUF_SIZE
-019C 719B            704             ACALL   SPI0_W
+019C 9134            704             ACALL   SPI0_W
                      705     
 019E 740C            706             MOV             A,              #00001100b
-01A0 719B            707             ACALL   SPI0_W
+01A0 9134            707             ACALL   SPI0_W
                      708     
 01A2 7400            709             MOV             A,              #0x00
-01A4 719B            710             ACALL   SPI0_W
+01A4 9134            710             ACALL   SPI0_W
                      711             
 01A6 D283            712             SETB    P0.3
-01A8 7181            713             ACALL   Wait_short
+01A8 911A            713             ACALL   Wait_short
                      714             
                      715     ;3.1.2. Настраиваем регистр S0_TXBUF_SIZE.
-A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 12:54:51 PAGE    12
+A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 17:57:01 PAGE    12
 
 01AA C283            716             CLR             P0.3
-01AC 7181            717             ACALL   Wait_short
+01AC 911A            717             ACALL   Wait_short
                      718             
 01AE E4              719             CLR             A
-01AF 719B            720             ACALL   SPI0_W
+01AF 9134            720             ACALL   SPI0_W
                      721     
 01B1 741F            722             MOV             A,              #S1_TXBUF_SIZE
-01B3 719B            723             ACALL   SPI0_W
+01B3 9134            723             ACALL   SPI0_W
                      724     
 01B5 740C            725             MOV             A,              #00001100b
-01B7 719B            726             ACALL   SPI0_W
+01B7 9134            726             ACALL   SPI0_W
                      727     
 01B9 7400            728             MOV             A,              #0x00
-01BB 719B            729             ACALL   SPI0_W
+01BB 9134            729             ACALL   SPI0_W
                      730                     
 01BD D283            731             SETB    P0.3
-01BF 7181            732             ACALL   Wait_short
+01BF 911A            732             ACALL   Wait_short
                      733     
                      734     ;3.2.1. Настраиваем регистр S2_RXBUF_SIZE.
 01C1 C283            735             CLR             P0.3
-01C3 7181            736             ACALL   Wait_short
+01C3 911A            736             ACALL   Wait_short
                      737             
 01C5 E4              738             CLR             A
-01C6 719B            739             ACALL   SPI0_W
+01C6 9134            739             ACALL   SPI0_W
                      740     
 01C8 741E            741             MOV             A,              #S1_RXBUF_SIZE
-01CA 719B            742             ACALL   SPI0_W
+01CA 9134            742             ACALL   SPI0_W
                      743     
 01CC 7454            744             MOV             A,              #01010100b
-01CE 719B            745             ACALL   SPI0_W
+01CE 9134            745             ACALL   SPI0_W
                      746     
 01D0 7400            747             MOV             A,              #0x00
-01D2 719B            748             ACALL   SPI0_W
+01D2 9134            748             ACALL   SPI0_W
                      749             
 01D4 D283            750             SETB    P0.3
-01D6 7181            751             ACALL   Wait_short
+01D6 911A            751             ACALL   Wait_short
                      752             
                      753     ;3.2.2. Настраиваем регистр S2_TXBUF_SIZE.
 01D8 C283            754             CLR             P0.3
-01DA 7181            755             ACALL   Wait_short
+01DA 911A            755             ACALL   Wait_short
                      756             
 01DC E4              757             CLR             A
-01DD 719B            758             ACALL   SPI0_W
+01DD 9134            758             ACALL   SPI0_W
                      759     
 01DF 741F            760             MOV             A,              #S1_TXBUF_SIZE
-01E1 719B            761             ACALL   SPI0_W
+01E1 9134            761             ACALL   SPI0_W
                      762     
 01E3 7454            763             MOV             A,              #01010100b
-01E5 719B            764             ACALL   SPI0_W
+01E5 9134            764             ACALL   SPI0_W
                      765     
 01E7 7400            766             MOV             A,              #0x00
-01E9 719B            767             ACALL   SPI0_W
+01E9 9134            767             ACALL   SPI0_W
                      768                     
 01EB D283            769             SETB    P0.3
-01ED 7181            770             ACALL   Wait_short
+01ED 911A            770             ACALL   Wait_short
                      771             
                      772     ;3.3.1. Настраиваем регистр S3_RXBUF_SIZE.
 01EF C283            773             CLR             P0.3
-01F1 7181            774             ACALL   Wait_short
+01F1 911A            774             ACALL   Wait_short
                      775             
 01F3 E4              776             CLR             A
-01F4 719B            777             ACALL   SPI0_W
+01F4 9134            777             ACALL   SPI0_W
                      778     
 01F6 741E            779             MOV             A,              #S1_RXBUF_SIZE
-01F8 719B            780             ACALL   SPI0_W
+01F8 9134            780             ACALL   SPI0_W
                      781     
-A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 12:54:51 PAGE    13
+A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 17:57:01 PAGE    13
 
 01FA 746C            782             MOV             A,              #01101100b
-01FC 719B            783             ACALL   SPI0_W
+01FC 9134            783             ACALL   SPI0_W
                      784     
 01FE 7404            785             MOV             A,              #0x04
-0200 719B            786             ACALL   SPI0_W
+0200 9134            786             ACALL   SPI0_W
                      787             
 0202 D283            788             SETB    P0.3
-0204 7181            789             ACALL   Wait_short
+0204 911A            789             ACALL   Wait_short
                      790             
                      791     ;3.3.2. Настраиваем регистр S3_TXBUF_SIZE.
 0206 C283            792             CLR             P0.3
-0208 7181            793             ACALL   Wait_short
+0208 911A            793             ACALL   Wait_short
                      794             
 020A E4              795             CLR             A
-020B 719B            796             ACALL   SPI0_W
+020B 9134            796             ACALL   SPI0_W
                      797     
 020D 741F            798             MOV             A,              #S1_TXBUF_SIZE
-020F 719B            799             ACALL   SPI0_W
+020F 9134            799             ACALL   SPI0_W
                      800     
 0211 746C            801             MOV             A,              #01101100b
-0213 719B            802             ACALL   SPI0_W
+0213 9134            802             ACALL   SPI0_W
                      803     
 0215 7408            804             MOV             A,              #0x08
-0217 719B            805             ACALL   SPI0_W
+0217 9134            805             ACALL   SPI0_W
                      806                     
 0219 D283            807             SETB    P0.3
-021B 7181            808             ACALL   Wait_short
+021B 911A            808             ACALL   Wait_short
                      809             
                      810     ;3.4.1. Настраиваем регистр S4_RXBUF_SIZE.
 021D C283            811             CLR             P0.3
-021F 7181            812             ACALL   Wait_short
+021F 911A            812             ACALL   Wait_short
                      813             
 0221 E4              814             CLR             A
-0222 719B            815             ACALL   SPI0_W
+0222 9134            815             ACALL   SPI0_W
                      816     
 0224 741E            817             MOV             A,              #S1_RXBUF_SIZE
-0226 719B            818             ACALL   SPI0_W
+0226 9134            818             ACALL   SPI0_W
                      819     
 0228 748C            820             MOV             A,              #10001100b
-022A 719B            821             ACALL   SPI0_W
+022A 9134            821             ACALL   SPI0_W
                      822     
 022C 7402            823             MOV             A,              #0x02
-022E 719B            824             ACALL   SPI0_W
+022E 9134            824             ACALL   SPI0_W
                      825             
 0230 D283            826             SETB    P0.3
-0232 7181            827             ACALL   Wait_short
+0232 911A            827             ACALL   Wait_short
                      828             
                      829     ;3.4.2. Настраиваем регистр S4_TXBUF_SIZE.
 0234 C283            830             CLR             P0.3
-0236 7181            831             ACALL   Wait_short
+0236 911A            831             ACALL   Wait_short
                      832             
 0238 E4              833             CLR             A
-0239 719B            834             ACALL   SPI0_W
+0239 9134            834             ACALL   SPI0_W
                      835     
 023B 741F            836             MOV             A,              #S1_TXBUF_SIZE
-023D 719B            837             ACALL   SPI0_W
+023D 9134            837             ACALL   SPI0_W
                      838     
 023F 748C            839             MOV             A,              #10001100b
-0241 719B            840             ACALL   SPI0_W
+0241 9134            840             ACALL   SPI0_W
                      841     
 0243 7402            842             MOV             A,              #0x02
-0245 719B            843             ACALL   SPI0_W
+0245 9134            843             ACALL   SPI0_W
                      844                     
 0247 D283            845             SETB    P0.3
-0249 7181            846             ACALL   Wait_short
+0249 911A            846             ACALL   Wait_short
                      847             
-A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 12:54:51 PAGE    14
+A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 17:57:01 PAGE    14
 
                      848     ;3.5.1. Настраиваем регистр S5_RXBUF_SIZE.
 024B C283            849             CLR             P0.3
-024D 7181            850             ACALL   Wait_short
+024D 911A            850             ACALL   Wait_short
                      851             
 024F E4              852             CLR             A
-0250 719B            853             ACALL   SPI0_W
+0250 9134            853             ACALL   SPI0_W
                      854     
 0252 741E            855             MOV             A,              #S1_RXBUF_SIZE
-0254 719B            856             ACALL   SPI0_W
+0254 9134            856             ACALL   SPI0_W
                      857     
 0256 74AC            858             MOV             A,              #10101100b
-0258 719B            859             ACALL   SPI0_W
+0258 9134            859             ACALL   SPI0_W
                      860     
 025A 7400            861             MOV             A,              #0x00
-025C 719B            862             ACALL   SPI0_W
+025C 9134            862             ACALL   SPI0_W
                      863             
 025E D283            864             SETB    P0.3
-0260 7181            865             ACALL   Wait_short
+0260 911A            865             ACALL   Wait_short
                      866             
                      867     ;3.5.2. Настраиваем регистр S5_TXBUF_SIZE.
 0262 C283            868             CLR             P0.3
-0264 7181            869             ACALL   Wait_short
+0264 911A            869             ACALL   Wait_short
                      870             
 0266 E4              871             CLR             A
-0267 719B            872             ACALL   SPI0_W
+0267 9134            872             ACALL   SPI0_W
                      873     
 0269 741F            874             MOV             A,              #S1_TXBUF_SIZE
-026B 719B            875             ACALL   SPI0_W
+026B 9134            875             ACALL   SPI0_W
                      876     
 026D 74AC            877             MOV             A,              #10101100b
-026F 719B            878             ACALL   SPI0_W
+026F 9134            878             ACALL   SPI0_W
                      879     
 0271 7400            880             MOV             A,              #0x00
-0273 719B            881             ACALL   SPI0_W
+0273 9134            881             ACALL   SPI0_W
                      882                     
 0275 D283            883             SETB    P0.3
-0277 7181            884             ACALL   Wait_short
+0277 911A            884             ACALL   Wait_short
                      885     
                      886     ;3.6.1. Настраиваем регистр S6_RXBUF_SIZE.
 0279 C283            887             CLR             P0.3
-027B 7181            888             ACALL   Wait_short
+027B 911A            888             ACALL   Wait_short
                      889             
 027D E4              890             CLR             A
-027E 719B            891             ACALL   SPI0_W
+027E 9134            891             ACALL   SPI0_W
                      892     
 0280 741E            893             MOV             A,              #S1_RXBUF_SIZE
-0282 719B            894             ACALL   SPI0_W
+0282 9134            894             ACALL   SPI0_W
                      895     
 0284 74CC            896             MOV             A,              #11001100b
-0286 719B            897             ACALL   SPI0_W
+0286 9134            897             ACALL   SPI0_W
                      898     
 0288 7400            899             MOV             A,              #0x00
-028A 719B            900             ACALL   SPI0_W
+028A 9134            900             ACALL   SPI0_W
                      901             
 028C D283            902             SETB    P0.3
-028E 7181            903             ACALL   Wait_short
+028E 911A            903             ACALL   Wait_short
                      904             
                      905     ;3.6.2. Настраиваем регистр S6_TXBUF_SIZE.
 0290 C283            906             CLR             P0.3
-0292 7181            907             ACALL   Wait_short
+0292 911A            907             ACALL   Wait_short
                      908             
 0294 E4              909             CLR             A
-0295 719B            910             ACALL   SPI0_W
+0295 9134            910             ACALL   SPI0_W
                      911     
 0297 741F            912             MOV             A,              #S1_TXBUF_SIZE
-0299 719B            913             ACALL   SPI0_W
-A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 12:54:51 PAGE    15
+0299 9134            913             ACALL   SPI0_W
+A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 17:57:01 PAGE    15
 
                      914     
 029B 74CC            915             MOV             A,              #11001100b
-029D 719B            916             ACALL   SPI0_W
+029D 9134            916             ACALL   SPI0_W
                      917     
 029F 7400            918             MOV             A,              #0x00
-02A1 719B            919             ACALL   SPI0_W
+02A1 9134            919             ACALL   SPI0_W
                      920                     
 02A3 D283            921             SETB    P0.3
-02A5 7181            922             ACALL   Wait_short
+02A5 911A            922             ACALL   Wait_short
                      923             
                      924     ;3.7.1. Настраиваем регистр S7_RXBUF_SIZE.
 02A7 C283            925             CLR             P0.3
-02A9 7181            926             ACALL   Wait_short
+02A9 911A            926             ACALL   Wait_short
                      927             
 02AB E4              928             CLR             A
-02AC 719B            929             ACALL   SPI0_W
+02AC 9134            929             ACALL   SPI0_W
                      930     
 02AE 741E            931             MOV             A,              #S1_RXBUF_SIZE
-02B0 719B            932             ACALL   SPI0_W
+02B0 9134            932             ACALL   SPI0_W
                      933     
 02B2 74EC            934             MOV             A,              #11101100b
-02B4 719B            935             ACALL   SPI0_W
+02B4 9134            935             ACALL   SPI0_W
                      936     
 02B6 7402            937             MOV             A,              #0x02
-02B8 719B            938             ACALL   SPI0_W
+02B8 9134            938             ACALL   SPI0_W
                      939             
 02BA D283            940             SETB    P0.3
-02BC 7181            941             ACALL   Wait_short
+02BC 911A            941             ACALL   Wait_short
                      942             
                      943     ;3.7.2. Настраиваем регистр S7_TXBUF_SIZE.
 02BE C283            944             CLR             P0.3
-02C0 7181            945             ACALL   Wait_short
+02C0 911A            945             ACALL   Wait_short
                      946             
 02C2 E4              947             CLR             A
-02C3 719B            948             ACALL   SPI0_W
+02C3 9134            948             ACALL   SPI0_W
                      949     
 02C5 741F            950             MOV             A,              #S1_TXBUF_SIZE
-02C7 719B            951             ACALL   SPI0_W
+02C7 9134            951             ACALL   SPI0_W
                      952     
 02C9 74EC            953             MOV             A,              #11101100b
-02CB 719B            954             ACALL   SPI0_W
+02CB 9134            954             ACALL   SPI0_W
                      955     
 02CD 7404            956             MOV             A,              #0x04
-02CF 719B            957             ACALL   SPI0_W
+02CF 9134            957             ACALL   SPI0_W
                      958                     
 02D1 D283            959             SETB    P0.3
-02D3 7181            960             ACALL   Wait_short
+02D3 911A            960             ACALL   Wait_short
                      961     ;-----------------------------------------      
                      962                     
                      963     ;Сделаем первую небольшую проверку.
 02D5 C283            964             CLR             P0.3
-02D7 7181            965             ACALL   Wait_short
+02D7 911A            965             ACALL   Wait_short
                      966             
 02D9 E4              967             CLR             A
-02DA 719B            968             ACALL   SPI0_W
+02DA 9134            968             ACALL   SPI0_W
                      969     
 02DC 7403            970             MOV             A,              #S1_SR
-02DE 719B            971             ACALL   SPI0_W
+02DE 9134            971             ACALL   SPI0_W
                      972     
 02E0 7428            973             MOV             A,              #00101000b
-02E2 719B            974             ACALL   SPI0_W
+02E2 9134            974             ACALL   SPI0_W
                      975             
 02E4 E4              976             CLR             A
-02E5 718F            977             ACALL   SPI0_R
+02E5 9128            977             ACALL   SPI0_R
                      978             
 02E7 D283            979             SETB    P0.3
-A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 12:54:51 PAGE    16
+A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 17:57:01 PAGE    16
 
-02E9 7181            980             ACALL   Wait_short
+02E9 911A            980             ACALL   Wait_short
                      981     ;Как видим, сокет пока закрыт.
                      982     
                      983     ;Откроем сокет 1.
 02EB C283            984             CLR             P0.3
-02ED 7181            985             ACALL   Wait_short
+02ED 911A            985             ACALL   Wait_short
                      986             
 02EF E4              987             CLR             A
-02F0 719B            988             ACALL   SPI0_W
+02F0 9134            988             ACALL   SPI0_W
                      989     
 02F2 7401            990             MOV             A,              #S1_CR
-02F4 719B            991             ACALL   SPI0_W
+02F4 9134            991             ACALL   SPI0_W
                      992     
 02F6 742C            993             MOV             A,              #00101100b
-02F8 719B            994             ACALL   SPI0_W
+02F8 9134            994             ACALL   SPI0_W
                      995             
 02FA 7401            996             MOV             A,              #0x01
-02FC 719B            997             ACALL   SPI0_W
+02FC 9134            997             ACALL   SPI0_W
                      998             
 02FE D283            999             SETB    P0.3
-0300 7181           1000             ACALL   Wait_short
+0300 911A           1000             ACALL   Wait_short
                     1001             
                     1002             
                     1003     
 0302                1004     Poll_Open:
                     1005     ;Теперь в статусе мы дожны увидеть 0x22.
 0302 C283           1006             CLR             P0.3
-0304 7181           1007             ACALL   Wait_short
+0304 911A           1007             ACALL   Wait_short
                     1008             
 0306 E4             1009             CLR             A
-0307 719B           1010             ACALL   SPI0_W
+0307 9134           1010             ACALL   SPI0_W
                     1011     
 0309 7403           1012             MOV             A,              #S1_SR
-030B 719B           1013             ACALL   SPI0_W
+030B 9134           1013             ACALL   SPI0_W
                     1014     
 030D 7428           1015             MOV             A,              #00101000b
-030F 719B           1016             ACALL   SPI0_W
+030F 9134           1016             ACALL   SPI0_W
                     1017             
 0311 E4             1018             CLR             A
-0312 718F           1019             ACALL   SPI0_R
+0312 9128           1019             ACALL   SPI0_R
                     1020             
 0314 D283           1021             SETB    P0.3
-0316 7181           1022             ACALL   Wait_short      
+0316 911A           1022             ACALL   Wait_short      
                     1023             
 0318 B422E7         1024             CJNE    A,              #0x22,          Poll_Open
                     1025             
-031B 752000         1026             MOV             0x20,           #0
-031E 752100         1027             MOV             0x21,           #0
-                    1028     ;Loop:  
-                    1029     ;Считываем, что происходит в регистре S1_RX_WR
-0321                1030     Wait_data:
-0321 C283           1031             CLR             P0.3
-0323 7181           1032             ACALL   Wait_short
-                    1033             
-0325 E4             1034             CLR             A
-0326 719B           1035             ACALL   SPI0_W
-                    1036     
-0328 742A           1037             MOV             A,              #S1_RX_WR
-032A 719B           1038             ACALL   SPI0_W
-                    1039     
-032C 7428           1040             MOV             A,              #00101000b
-032E 719B           1041             ACALL   SPI0_W
-                    1042             
-0330 E4             1043             CLR             A
-0331 718F           1044             ACALL   SPI0_R
-0333 F522           1045             MOV             0x22,           A               ;Запоминаем текущие значения
-A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 12:54:51 PAGE    17
+031B 758300         1026             MOV             DPH,    #0x00
+031E 758206         1027             MOV             DPL,    #0x06
+                    1028     
+                    1029     
+                    1030     
+                    1031     ;Дождемся, пока на сокете 1 произойдет прерывание.
+0321                1032     Wait_for_an_interrupt:
+0321 C283           1033             CLR             P0.3
+0323 911A           1034             ACALL   Wait_short
+                    1035             
+0325 E4             1036             CLR             A
+0326 9134           1037             ACALL   SPI0_W
+                    1038     
+0328 7417           1039             MOV             A,              #SIR
+032A 9134           1040             ACALL   SPI0_W
+                    1041     
+032C 7400           1042             MOV             A,              #00000000b
+032E 9134           1043             ACALL   SPI0_W
+                    1044     
+0330 E4             1045             CLR             A
+A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 17:57:01 PAGE    17
 
-                    1046             
-0335 E4             1047             CLR             A
-0336 718F           1048             ACALL   SPI0_R
-0338 F523           1049             MOV             0x23,           A               ;Запоминаем текущие значения
+0331 9128           1046             ACALL   SPI0_R
+                    1047                     
+0333 D283           1048             SETB    P0.3
+0335 911A           1049             ACALL   Wait_short
                     1050             
-033A D283           1051             SETB    P0.3
-033C 7181           1052             ACALL   Wait_short
-                    1053     
-                    1054     
-033E E522           1055             MOV             A,              0x22
-0340 7007           1056             JNZ             High_byte_change
-0342 E523           1057             MOV             A,              0x23
-0344 700B           1058             JNZ             Least_byte_change
-0346 020321         1059             LJMP    Wait_data
-                    1060             
-0349                1061             High_byte_change:
-0349 E522           1062                     MOV             A,              0x22
-034B B5200B         1063                     CJNE    A,              0x20,           Read_data
-034E 020351         1064                     LJMP    Least_byte_change
-                    1065             
-0351                1066             Least_byte_change:
-0351 E523           1067                     MOV             A,              0x23
-0353 B52103         1068                     CJNE    A,              0x21,           Read_data       
-0356 020349         1069                     LJMP    High_byte_change
-                    1070                     
-0359                1071             Read_data:
-0359 852220         1072                     MOV             0x20,           0x22
-035C 852321         1073                     MOV             0x21,           0x23    
-                    1074     ;Вполне вероятно, что то адрес в буфере Rx сокета.
-035F 852083         1075                     MOV             DPH,            0x20
-0362 852182         1076                     MOV             DPL,            0x21
-                    1077     ;LJMP Loop
-                    1078     
-                    1079     
-                    1080     ; Теперь перейдем по тому адресу и считаем 2 байта.
-0365 C283           1081             CLR             P0.3
-0367 7181           1082             ACALL   Wait_short
-                    1083             
-0369 7400           1084             MOV             A,              #0;0x20
-036B 719B           1085             ACALL   SPI0_W
-                    1086     
-036D 7400           1087             MOV             A,              #0;0x21
-036F 719B           1088             ACALL   SPI0_W
-                    1089     
-0371 7438           1090             MOV             A,              #00111000b
-0373 719B           1091             ACALL   SPI0_W
+0337 30E1E7         1051             JNB     ACC.1,  Wait_for_an_interrupt   ;       Переход, если бит равен нулю.
+                    1052     
+                    1053     ;Обнуляем флажок.
+033A C283           1054             CLR             P0.3
+033C 911A           1055             ACALL   Wait_short
+                    1056             
+033E E4             1057             CLR             A
+033F 9134           1058             ACALL   SPI0_W
+                    1059     
+0341 7417           1060             MOV             A,              #SIR
+0343 9134           1061             ACALL   SPI0_W
+                    1062     
+0345 7404           1063             MOV             A,              #00000100b
+0347 9134           1064             ACALL   SPI0_W
+                    1065     
+0349 7400           1066             MOV             A,              #00000000b
+034B 9134           1067             ACALL   SPI0_W
+                    1068                     
+034D D283           1069             SETB    P0.3
+034F 911A           1070             ACALL   Wait_short
+                    1071     
+                    1072     ;Проверяем, что флажок обнулился.
+0351                1073     Flag_clearance_check:
+0351 20E1FD         1074             JB              ACC.1,  Flag_clearance_check            ;       Переход, если бит р
+                             авен единице.
+                    1075     
+                    1076     ;Переходим в буфер RX сокета 1 и считываем сначала длину сообщения.
+0354 C283           1077             CLR             P0.3
+0356 911A           1078             ACALL   Wait_short
+                    1079             
+0358 E583           1080             MOV             A,              DPH
+035A 9134           1081             ACALL   SPI0_W
+                    1082     
+035C E582           1083             MOV             A,              DPL
+035E 9134           1084             ACALL   SPI0_W
+                    1085     
+0360 7438           1086             MOV             A,              #00111000b
+0362 9134           1087             ACALL   SPI0_W
+                    1088     
+0364 E4             1089             CLR             A
+0365 9128           1090             ACALL   SPI0_R
+0367 F520           1091             MOV             0x20,   A
                     1092             
-0375 E4             1093             CLR             A
-0376 718F           1094             ACALL   SPI0_R
-                    1095             
-0378 E4             1096             CLR             A
-0379 718F           1097             ACALL   SPI0_R
-                    1098             
-037B D283           1099             SETB    P0.3
-037D 7181           1100             ACALL   Wait_short
-                    1101     
-                    1102     
-                    1103     
-                    1104     
-                    1105     
+0369 E4             1093             CLR             A
+036A 9128           1094             ACALL   SPI0_R
+036C F521           1095             MOV             0x21,   A
+                    1096     
+036E D283           1097             SETB    P0.3
+0370 911A           1098             ACALL   Wait_short
+                    1099             
+                    1100             
+                    1101     ;Вот то ваный шаг.
+0372 E582           1102             MOV     A,              DPL
+0374 C3             1103             CLR     C
+0375 3523           1104             ADDC    A,              0x23
+0377 F582           1105             MOV     DPL,     A
                     1106     
-                    1107     
-                    1108     
-                    1109     
+0379 E583           1107             MOV     A,              DPH
+037B 3522           1108             ADDC    A,              0x22
+037D F583           1109             MOV     DPH,     A
                     1110     
-                    1111     
-A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 12:54:51 PAGE    18
+A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 17:57:01 PAGE    18
 
-                    1112     
-                    1113     
-                    1114     
-                    1115     
-                    1116             
-                    1117             
-                    1118             
-                    1119             
-                    1120             
-                    1121             
-                    1122             
-                    1123             
-                    1124             
-                    1125             
-                    1126             
-037F 80FE           1127             SJMP    $
+                    1111     ;Пока с длиной ничего не случилось, меняем указатель чтения.
+                    1112     ;Сначала читаем текущее значение.
+037F C283           1113             CLR             P0.3
+0381 911A           1114             ACALL   Wait_short
+                    1115             
+0383 E4             1116             CLR             A
+0384 9134           1117             ACALL   SPI0_W
+                    1118     
+0386 7428           1119             MOV             A,              #S1_RX_RD
+0388 9134           1120             ACALL   SPI0_W
+                    1121     
+038A 7428           1122             MOV             A,              #00101000b
+038C 9134           1123             ACALL   SPI0_W
+                    1124     
+038E E4             1125             CLR             A
+038F 9128           1126             ACALL   SPI0_R
+0391 F522           1127             MOV             0x22,   A
                     1128             
-                    1129             
-                    1130     ;$include (My_library_for_W5500.inc)
-                +1  1131     
-  00A0          +1  1132     PIN_RSTN        EQU             P2.0
-  0000          +1  1133     MR                      EQU             0x00
-  0001          +1  1134     GAR1            EQU             0x01
-  0005          +1  1135     SUBR1           EQU             0x05
-  0009          +1  1136     SHAR1           EQU             0x09
-  000F          +1  1137     SIPR1           EQU             0x0F
-  0019          +1  1138     RTR1            EQU             0x19
-  001B          +1  1139     RCR1            EQU             0x1B
-                +1  1140     
-  0000          +1  1141     S1_MR           EQU             0x00
-  0004          +1  1142     S1_PORT         EQU             0x04
-  0016          +1  1143     S1_TTL          EQU             0x16
-  001E          +1  1144     S1_RXBUF_SIZE   EQU             0x1E
-  001F          +1  1145     S1_TXBUF_SIZE   EQU             0x1F
-  0003          +1  1146     S1_SR           EQU             0x03
-  0001          +1  1147     S1_CR           EQU             0x01
-  002A          +1  1148     S1_RX_WR        EQU             0x2A
-  0028          +1  1149     S1_RX_RD        EQU             0x28
-                +1  1150     
-                +1  1151     
-                +1  1152     
-                +1  1153     
-0381            +1  1154     Wait_short:
-0381 7864       +1  1155             MOV             R0,                     #100
-0383            +1  1156             Wait_sh:
-0383 D8FE       +1  1157                     DJNZ    R0,                     Wait_sh
-0385 22         +1  1158     RET
-                +1  1159     
-0386            +1  1160     Wait_long:
-0386 7800       +1  1161             MOV             R0,             #0
-0388 7900       +1  1162             MOV             R1,             #0
-                +1  1163             
-038A            +1  1164             Wait_ln:
-038A D8FE       +1  1165                     DJNZ    R0,             Wait_ln
-038C D9FC       +1  1166                     DJNZ    R1,             Wait_ln
-038E 22         +1  1167     RET
-                +1  1168     
-                +1  1169     
-038F            +1  1170     SPI0_R:
-038F F59B       +1  1171             MOV             SPI0DAT,        A
-                +1  1172     
-                +1  1173     ;poll_SPIF_r:
-0391 30FFFD     +1  1174             JNB             SPIF,           $ ;poll_SPIF_r          
-0394 C2FF       +1  1175             CLR             SPIF
-                +1  1176     
-0396 E59B       +1  1177             MOV             A,                      SPI0DAT
-A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 12:54:51 PAGE    19
+0393 E4             1129             CLR             A
+0394 9128           1130             ACALL   SPI0_R
+0396 F523           1131             MOV             0x23,   A
+                    1132     
+0398 D283           1133             SETB    P0.3
+039A 911A           1134             ACALL   Wait_short
+                    1135     
+                    1136     ;Складываем текущее значение регистра с длинной сообщения.
+039C E523           1137             MOV     A,              0x23
+039E C3             1138             CLR     C
+039F 3521           1139             ADDC    A,              0x21
+03A1 F523           1140             MOV     0x23,    A
+                    1141     
+03A3 E522           1142             MOV     A,              0x22
+03A5 3520           1143             ADDC    A,              0x20
+03A7 F522           1144             MOV     0x22,    A
+                    1145     
+                    1146     ;Записываем получившееся число обратно в регистр.
+03A9 C283           1147             CLR             P0.3
+03AB 911A           1148             ACALL   Wait_short
+                    1149             
+03AD E4             1150             CLR             A
+03AE 9134           1151             ACALL   SPI0_W
+                    1152     
+03B0 7428           1153             MOV             A,              #S1_RX_RD
+03B2 9134           1154             ACALL   SPI0_W
+                    1155     
+03B4 742C           1156             MOV             A,              #00101100b
+03B6 9134           1157             ACALL   SPI0_W
+                    1158     
+03B8 E522           1159             MOV     A,       0x22
+03BA 9134           1160             ACALL   SPI0_W
+                    1161             
+03BC E523           1162             MOV     A,       0x23
+03BE 9134           1163             ACALL   SPI0_W
+                    1164     
+03C0 D283           1165             SETB    P0.3
+03C2 911A           1166             ACALL   Wait_short
+                    1167             
+                    1168     
+                    1169     ;А теперь считываем сами данные.
+03C4 C283           1170             CLR             P0.3
+03C6 911A           1171             ACALL   Wait_short
+                    1172             
+03C8 7B02           1173             MOV             R3,             #2
+03CA                1174     Inc_len:
+03CA E582           1175             MOV     A,              DPL
+03CC C3             1176             CLR     C
+A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 17:57:01 PAGE    19
 
-0398 7181       +1  1178             ACALL   Wait_short
-039A 22         +1  1179     RET
-                +1  1180     
-039B            +1  1181     SPI0_W:
-039B F59B       +1  1182             MOV             SPI0DAT,        A
-                +1  1183     
-                +1  1184     ;poll_SPIF_w:
-039D 30FFFD     +1  1185             JNB             SPIF,           $ ; poll_SPIF_w 
-03A0 C2FF       +1  1186             CLR             SPIF
-03A2 22         +1  1187     RET
-                +1  1188     
-                +1  1189     
-                +1  1190     
-                +1  1191     
-                    1192     
+03CD 3401           1177             ADDC    A,              #1
+03CF F582           1178             MOV     DPL,     A
+                    1179     
+03D1 E583           1180             MOV     A,              DPH
+03D3 9400           1181             SUBB    A,              #0
+03D5 F583           1182             MOV     DPH,     A
+03D7 DBF1           1183             DJNZ    R3,             Inc_len
+                    1184             
+03D9 E583           1185             MOV             A,              DPH
+03DB 9134           1186             ACALL   SPI0_W
+                    1187             
+03DD E582           1188             MOV             A,              DPL
+03DF 9134           1189             ACALL   SPI0_W
+                    1190     
+03E1 7438           1191             MOV             A,              #00111000b
+03E3 9134           1192             ACALL   SPI0_W
                     1193     
-                    1194     END
-A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 12:54:51 PAGE    20
+03E5                1194     Data_reading:
+03E5 E4             1195             CLR             A
+03E6 9128           1196             ACALL   SPI0_R
+                    1197             
+03E8 FB             1198             MOV             R3,             A
+                    1199     ;Декремент длинны сообщения.
+03E9 E521           1200             MOV     A,              0x21
+03EB C3             1201             CLR     C
+03EC 9401           1202             SUBB    A,              #1
+03EE F521           1203             MOV     0x21,    A
+                    1204     
+03F0 E520           1205             MOV     A,              0x20
+03F2 9400           1206             SUBB    A,              #0
+03F4 F520           1207             MOV     0x20,   A
+                    1208     
+                    1209     ;Сообщение закончилось?
+03F6 E520           1210             MOV             A,              0x20
+03F8 4521           1211             ORL             A,              0x21
+                    1212     
+03FA 70E9           1213             JNZ             Data_reading
+                    1214             
+03FC D283           1215             SETB    P0.3
+03FE 911A           1216             ACALL   Wait_short
+                    1217     
+                    1218     ;Даем команду, что прием данных закончен. Т.е. передадим в S1_CR команду RECV.
+0400 C283           1219             CLR             P0.3
+0402 911A           1220             ACALL   Wait_short
+                    1221             
+0404 E4             1222             CLR             A
+0405 9134           1223             ACALL   SPI0_W
+                    1224     
+0407 7401           1225             MOV             A,              #S1_CR
+                    1226     
+0409 742C           1227             MOV             A,              #00101100b
+040B 9134           1228             ACALL   SPI0_W
+                    1229     
+040D 7440           1230             MOV     A,              #0x40
+040F 9134           1231             ACALL   SPI0_W
+                    1232     
+0411 D283           1233             SETB    P0.3
+0413 911A           1234             ACALL   Wait_short
+                    1235             
+0415 020321         1236             LJMP    Wait_for_an_interrupt
+                    1237             
+                    1238             
+                    1239             
+0418 80FE           1240             SJMP    $
+                    1241             
+                    1242             
+A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 17:57:01 PAGE    20
+
+                    1243     ;$include (My_library_for_W5500.inc)
+                +1  1244     
+  00A0          +1  1245     PIN_RSTN        EQU             P2.0
+  0000          +1  1246     MR                      EQU             0x00
+  0001          +1  1247     GAR1            EQU             0x01
+  0005          +1  1248     SUBR1           EQU             0x05
+  0009          +1  1249     SHAR1           EQU             0x09
+  000F          +1  1250     SIPR1           EQU             0x0F
+  0019          +1  1251     RTR1            EQU             0x19
+  001B          +1  1252     RCR1            EQU             0x1B
+                +1  1253     
+  0000          +1  1254     S1_MR           EQU             0x00
+  0004          +1  1255     S1_PORT         EQU             0x04
+  0016          +1  1256     S1_TTL          EQU             0x16
+  001E          +1  1257     S1_RXBUF_SIZE   EQU             0x1E
+  001F          +1  1258     S1_TXBUF_SIZE   EQU             0x1F
+  0003          +1  1259     S1_SR           EQU             0x03
+  0001          +1  1260     S1_CR           EQU             0x01
+  002A          +1  1261     S1_RX_WR        EQU             0x2A
+  0028          +1  1262     S1_RX_RD        EQU             0x28
+                +1  1263     
+  0018          +1  1264     MSIR            EQU             0x18
+  0017          +1  1265     SIR                     EQU             0x17
+                +1  1266     
+041A            +1  1267     Wait_short:
+041A 7864       +1  1268             MOV             R0,                     #100
+041C            +1  1269             Wait_sh:
+041C D8FE       +1  1270                     DJNZ    R0,                     Wait_sh
+041E 22         +1  1271     RET
+                +1  1272     
+041F            +1  1273     Wait_long:
+041F 7800       +1  1274             MOV             R0,             #0
+0421 7900       +1  1275             MOV             R1,             #0
+                +1  1276             
+0423            +1  1277             Wait_ln:
+0423 D8FE       +1  1278                     DJNZ    R0,             Wait_ln
+0425 D9FC       +1  1279                     DJNZ    R1,             Wait_ln
+0427 22         +1  1280     RET
+                +1  1281     
+                +1  1282     
+0428            +1  1283     SPI0_R:
+0428 F59B       +1  1284             MOV             SPI0DAT,        A
+                +1  1285     
+                +1  1286     ;poll_SPIF_r:
+042A 30FFFD     +1  1287             JNB             SPIF,           $ ;poll_SPIF_r          
+042D C2FF       +1  1288             CLR             SPIF
+                +1  1289     
+042F E59B       +1  1290             MOV             A,                      SPI0DAT
+0431 911A       +1  1291             ACALL   Wait_short
+0433 22         +1  1292     RET
+                +1  1293     
+0434            +1  1294     SPI0_W:
+0434 F59B       +1  1295             MOV             SPI0DAT,        A
+                +1  1296     
+                +1  1297     ;poll_SPIF_w:
+0436 30FFFD     +1  1298             JNB             SPIF,           $ ; poll_SPIF_w 
+0439 C2FF       +1  1299             CLR             SPIF
+043B 22         +1  1300     RET
+                +1  1301     
+                +1  1302     
+                +1  1303     
+                +1  1304     
+                    1305     
+                    1306     
+                    1307     END
+A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 17:57:01 PAGE    21
 
 SYMBOL TABLE LISTING
 ------ ----- -------
 
 
-N A M E             T Y P E  V A L U E   ATTRIBUTES
+N A M E                T Y P E  V A L U E   ATTRIBUTES
 
-AA . . . . . . . .  B ADDR   00C0H.2 A   
-AC . . . . . . . .  B ADDR   00D0H.6 A   
-ACC. . . . . . . .  D ADDR   00E0H   A   
-AD0BUSY. . . . . .  B ADDR   00E8H.4 A   
-AD0CM0 . . . . . .  B ADDR   00E8H.2 A   
-AD0CM1 . . . . . .  B ADDR   00E8H.3 A   
-AD0EN. . . . . . .  B ADDR   00E8H.7 A   
-AD0INT . . . . . .  B ADDR   00E8H.5 A   
-AD0LJST. . . . . .  B ADDR   00E8H.0 A   
-AD0TM. . . . . . .  B ADDR   00E8H.6 A   
-AD0WINT. . . . . .  B ADDR   00E8H.1 A   
-AD2BUSY. . . . . .  B ADDR   00E8H.4 A   
-AD2CM0 . . . . . .  B ADDR   00E8H.1 A   
-AD2CM1 . . . . . .  B ADDR   00E8H.2 A   
-AD2CM2 . . . . . .  B ADDR   00E8H.3 A   
-AD2EN. . . . . . .  B ADDR   00E8H.7 A   
-AD2INT . . . . . .  B ADDR   00E8H.5 A   
-AD2TM. . . . . . .  B ADDR   00E8H.6 A   
-AD2WINT. . . . . .  B ADDR   00E8H.0 A   
-ADC0CF . . . . . .  D ADDR   00BCH   A   
-ADC0CN . . . . . .  D ADDR   00E8H   A   
-ADC0GTH. . . . . .  D ADDR   00C5H   A   
-ADC0GTL. . . . . .  D ADDR   00C4H   A   
-ADC0H. . . . . . .  D ADDR   00BFH   A   
-ADC0L. . . . . . .  D ADDR   00BEH   A   
-ADC0LTH. . . . . .  D ADDR   00C7H   A   
-ADC0LTL. . . . . .  D ADDR   00C6H   A   
-ADC0_PAGE. . . . .  N NUMB   0000H   A   
-ADC2 . . . . . . .  D ADDR   00BEH   A   
-ADC2CF . . . . . .  D ADDR   00BCH   A   
-ADC2CN . . . . . .  D ADDR   00E8H   A   
-ADC2GT . . . . . .  D ADDR   00C4H   A   
-ADC2LT . . . . . .  D ADDR   00C6H   A   
-ADC2_PAGE. . . . .  N NUMB   0002H   A   
-AMX0CF . . . . . .  D ADDR   00BAH   A   
-AMX0SL . . . . . .  D ADDR   00BBH   A   
-AMX2CF . . . . . .  D ADDR   00BAH   A   
-AMX2SL . . . . . .  D ADDR   00BBH   A   
-B. . . . . . . . .  D ADDR   00F0H   A   
-BUSY . . . . . . .  B ADDR   00C0H.7 A   
-CCF0 . . . . . . .  B ADDR   00D8H.0 A   
-CCF1 . . . . . . .  B ADDR   00D8H.1 A   
-CCF2 . . . . . . .  B ADDR   00D8H.2 A   
-CCF3 . . . . . . .  B ADDR   00D8H.3 A   
-CCF4 . . . . . . .  B ADDR   00D8H.4 A   
-CCF5 . . . . . . .  B ADDR   00D8H.5 A   
-CCH0CN . . . . . .  D ADDR   00A1H   A   
-CCH0LC . . . . . .  D ADDR   00A3H   A   
-CCH0MA . . . . . .  D ADDR   009AH   A   
-CCH0TN . . . . . .  D ADDR   00A2H   A   
-CF . . . . . . . .  B ADDR   00D8H.7 A   
-CKCON. . . . . . .  D ADDR   008EH   A   
-CLKSEL . . . . . .  D ADDR   0097H   A   
-CONFIG_PAGE. . . .  N NUMB   000FH   A   
-CP0EN. . . . . . .  B ADDR   0088H.7 A   
-CP0FIF . . . . . .  B ADDR   0088H.4 A   
-CP0HYN0. . . . . .  B ADDR   0088H.0 A   
-CP0HYN1. . . . . .  B ADDR   0088H.1 A   
-CP0HYP0. . . . . .  B ADDR   0088H.2 A   
-CP0HYP1. . . . . .  B ADDR   0088H.3 A   
-A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 12:54:51 PAGE    21
+AA. . . . . . . . . .  B ADDR   00C0H.2 A   
+AC. . . . . . . . . .  B ADDR   00D0H.6 A   
+ACC . . . . . . . . .  D ADDR   00E0H   A   
+AD0BUSY . . . . . . .  B ADDR   00E8H.4 A   
+AD0CM0. . . . . . . .  B ADDR   00E8H.2 A   
+AD0CM1. . . . . . . .  B ADDR   00E8H.3 A   
+AD0EN . . . . . . . .  B ADDR   00E8H.7 A   
+AD0INT. . . . . . . .  B ADDR   00E8H.5 A   
+AD0LJST . . . . . . .  B ADDR   00E8H.0 A   
+AD0TM . . . . . . . .  B ADDR   00E8H.6 A   
+AD0WINT . . . . . . .  B ADDR   00E8H.1 A   
+AD2BUSY . . . . . . .  B ADDR   00E8H.4 A   
+AD2CM0. . . . . . . .  B ADDR   00E8H.1 A   
+AD2CM1. . . . . . . .  B ADDR   00E8H.2 A   
+AD2CM2. . . . . . . .  B ADDR   00E8H.3 A   
+AD2EN . . . . . . . .  B ADDR   00E8H.7 A   
+AD2INT. . . . . . . .  B ADDR   00E8H.5 A   
+AD2TM . . . . . . . .  B ADDR   00E8H.6 A   
+AD2WINT . . . . . . .  B ADDR   00E8H.0 A   
+ADC0CF. . . . . . . .  D ADDR   00BCH   A   
+ADC0CN. . . . . . . .  D ADDR   00E8H   A   
+ADC0GTH . . . . . . .  D ADDR   00C5H   A   
+ADC0GTL . . . . . . .  D ADDR   00C4H   A   
+ADC0H . . . . . . . .  D ADDR   00BFH   A   
+ADC0L . . . . . . . .  D ADDR   00BEH   A   
+ADC0LTH . . . . . . .  D ADDR   00C7H   A   
+ADC0LTL . . . . . . .  D ADDR   00C6H   A   
+ADC0_PAGE . . . . . .  N NUMB   0000H   A   
+ADC2. . . . . . . . .  D ADDR   00BEH   A   
+ADC2CF. . . . . . . .  D ADDR   00BCH   A   
+ADC2CN. . . . . . . .  D ADDR   00E8H   A   
+ADC2GT. . . . . . . .  D ADDR   00C4H   A   
+ADC2LT. . . . . . . .  D ADDR   00C6H   A   
+ADC2_PAGE . . . . . .  N NUMB   0002H   A   
+AMX0CF. . . . . . . .  D ADDR   00BAH   A   
+AMX0SL. . . . . . . .  D ADDR   00BBH   A   
+AMX2CF. . . . . . . .  D ADDR   00BAH   A   
+AMX2SL. . . . . . . .  D ADDR   00BBH   A   
+B . . . . . . . . . .  D ADDR   00F0H   A   
+BUSY. . . . . . . . .  B ADDR   00C0H.7 A   
+CCF0. . . . . . . . .  B ADDR   00D8H.0 A   
+CCF1. . . . . . . . .  B ADDR   00D8H.1 A   
+CCF2. . . . . . . . .  B ADDR   00D8H.2 A   
+CCF3. . . . . . . . .  B ADDR   00D8H.3 A   
+CCF4. . . . . . . . .  B ADDR   00D8H.4 A   
+CCF5. . . . . . . . .  B ADDR   00D8H.5 A   
+CCH0CN. . . . . . . .  D ADDR   00A1H   A   
+CCH0LC. . . . . . . .  D ADDR   00A3H   A   
+CCH0MA. . . . . . . .  D ADDR   009AH   A   
+CCH0TN. . . . . . . .  D ADDR   00A2H   A   
+CF. . . . . . . . . .  B ADDR   00D8H.7 A   
+CKCON . . . . . . . .  D ADDR   008EH   A   
+CLKSEL. . . . . . . .  D ADDR   0097H   A   
+CONFIG_PAGE . . . . .  N NUMB   000FH   A   
+CP0EN . . . . . . . .  B ADDR   0088H.7 A   
+CP0FIF. . . . . . . .  B ADDR   0088H.4 A   
+CP0HYN0 . . . . . . .  B ADDR   0088H.0 A   
+CP0HYN1 . . . . . . .  B ADDR   0088H.1 A   
+CP0HYP0 . . . . . . .  B ADDR   0088H.2 A   
+CP0HYP1 . . . . . . .  B ADDR   0088H.3 A   
+A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 17:57:01 PAGE    22
 
-CP0OUT . . . . . .  B ADDR   0088H.6 A   
-CP0RIF . . . . . .  B ADDR   0088H.5 A   
-CP1EN. . . . . . .  B ADDR   0088H.7 A   
-CP1FIF . . . . . .  B ADDR   0088H.4 A   
-CP1HYN0. . . . . .  B ADDR   0088H.0 A   
-CP1HYN1. . . . . .  B ADDR   0088H.1 A   
-CP1HYP0. . . . . .  B ADDR   0088H.2 A   
-CP1HYP1. . . . . .  B ADDR   0088H.3 A   
-CP1OUT . . . . . .  B ADDR   0088H.6 A   
-CP1RIF . . . . . .  B ADDR   0088H.5 A   
-CPRL2. . . . . . .  B ADDR   00C8H.0 A   
-CPRL3. . . . . . .  B ADDR   00C8H.0 A   
-CPRL4. . . . . . .  B ADDR   00C8H.0 A   
-CPT0CN . . . . . .  D ADDR   0088H   A   
-CPT0MD . . . . . .  D ADDR   0089H   A   
-CPT0_PAGE. . . . .  N NUMB   0001H   A   
-CPT1CN . . . . . .  D ADDR   0088H   A   
-CPT1MD . . . . . .  D ADDR   0089H   A   
-CPT1_PAGE. . . . .  N NUMB   0002H   A   
-CR . . . . . . . .  B ADDR   00D8H.6 A   
-CT2. . . . . . . .  B ADDR   00C8H.1 A   
-CT3. . . . . . . .  B ADDR   00C8H.1 A   
-CT4. . . . . . . .  B ADDR   00C8H.1 A   
-CY . . . . . . . .  B ADDR   00D0H.7 A   
-DAC0CN . . . . . .  D ADDR   00D4H   A   
-DAC0H. . . . . . .  D ADDR   00D3H   A   
-DAC0L. . . . . . .  D ADDR   00D2H   A   
-DAC0_PAGE. . . . .  N NUMB   0000H   A   
-DAC1CN . . . . . .  D ADDR   00D4H   A   
-DAC1H. . . . . . .  D ADDR   00D3H   A   
-DAC1L. . . . . . .  D ADDR   00D2H   A   
-DAC1_PAGE. . . . .  N NUMB   0001H   A   
-DPH. . . . . . . .  D ADDR   0083H   A   
-DPL. . . . . . . .  D ADDR   0082H   A   
-EA . . . . . . . .  B ADDR   00A8H.7 A   
-EIE1 . . . . . . .  D ADDR   00E6H   A   
-EIE2 . . . . . . .  D ADDR   00E7H   A   
-EIP1 . . . . . . .  D ADDR   00F6H   A   
-EIP2 . . . . . . .  D ADDR   00F7H   A   
-EMI0CF . . . . . .  D ADDR   00A3H   A   
-EMI0CN . . . . . .  D ADDR   00A2H   A   
-EMI0TC . . . . . .  D ADDR   00A1H   A   
-EMI0_PAGE. . . . .  N NUMB   0000H   A   
-ENSMB. . . . . . .  B ADDR   00C0H.6 A   
-ES0. . . . . . . .  B ADDR   00A8H.4 A   
-ET0. . . . . . . .  B ADDR   00A8H.1 A   
-ET1. . . . . . . .  B ADDR   00A8H.3 A   
-ET2. . . . . . . .  B ADDR   00A8H.5 A   
-EX0. . . . . . . .  B ADDR   00A8H.0 A   
-EX1. . . . . . . .  B ADDR   00A8H.2 A   
-EXEN2. . . . . . .  B ADDR   00C8H.3 A   
-EXEN3. . . . . . .  B ADDR   00C8H.3 A   
-EXEN4. . . . . . .  B ADDR   00C8H.3 A   
-EXF2 . . . . . . .  B ADDR   00C8H.6 A   
-EXF3 . . . . . . .  B ADDR   00C8H.6 A   
-EXF4 . . . . . . .  B ADDR   00C8H.6 A   
-F0 . . . . . . . .  B ADDR   00D0H.5 A   
-F1 . . . . . . . .  B ADDR   00D0H.1 A   
-FLACL. . . . . . .  D ADDR   00B7H   A   
-FLHBUSY. . . . . .  B ADDR   0088H.0 A   
-FLSCL. . . . . . .  D ADDR   00B7H   A   
-FLSTAT . . . . . .  D ADDR   0088H   A   
-GAR1 . . . . . . .  N NUMB   0001H   A   
-HIGH_BYTE_CHANGE .  C ADDR   0349H   A   
-IE . . . . . . . .  D ADDR   00A8H   A   
-IE0. . . . . . . .  B ADDR   0088H.1 A   
-A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 12:54:51 PAGE    22
+CP0OUT. . . . . . . .  B ADDR   0088H.6 A   
+CP0RIF. . . . . . . .  B ADDR   0088H.5 A   
+CP1EN . . . . . . . .  B ADDR   0088H.7 A   
+CP1FIF. . . . . . . .  B ADDR   0088H.4 A   
+CP1HYN0 . . . . . . .  B ADDR   0088H.0 A   
+CP1HYN1 . . . . . . .  B ADDR   0088H.1 A   
+CP1HYP0 . . . . . . .  B ADDR   0088H.2 A   
+CP1HYP1 . . . . . . .  B ADDR   0088H.3 A   
+CP1OUT. . . . . . . .  B ADDR   0088H.6 A   
+CP1RIF. . . . . . . .  B ADDR   0088H.5 A   
+CPRL2 . . . . . . . .  B ADDR   00C8H.0 A   
+CPRL3 . . . . . . . .  B ADDR   00C8H.0 A   
+CPRL4 . . . . . . . .  B ADDR   00C8H.0 A   
+CPT0CN. . . . . . . .  D ADDR   0088H   A   
+CPT0MD. . . . . . . .  D ADDR   0089H   A   
+CPT0_PAGE . . . . . .  N NUMB   0001H   A   
+CPT1CN. . . . . . . .  D ADDR   0088H   A   
+CPT1MD. . . . . . . .  D ADDR   0089H   A   
+CPT1_PAGE . . . . . .  N NUMB   0002H   A   
+CR. . . . . . . . . .  B ADDR   00D8H.6 A   
+CT2 . . . . . . . . .  B ADDR   00C8H.1 A   
+CT3 . . . . . . . . .  B ADDR   00C8H.1 A   
+CT4 . . . . . . . . .  B ADDR   00C8H.1 A   
+CY. . . . . . . . . .  B ADDR   00D0H.7 A   
+DAC0CN. . . . . . . .  D ADDR   00D4H   A   
+DAC0H . . . . . . . .  D ADDR   00D3H   A   
+DAC0L . . . . . . . .  D ADDR   00D2H   A   
+DAC0_PAGE . . . . . .  N NUMB   0000H   A   
+DAC1CN. . . . . . . .  D ADDR   00D4H   A   
+DAC1H . . . . . . . .  D ADDR   00D3H   A   
+DAC1L . . . . . . . .  D ADDR   00D2H   A   
+DAC1_PAGE . . . . . .  N NUMB   0001H   A   
+DATA_READING. . . . .  C ADDR   03E5H   A   
+DPH . . . . . . . . .  D ADDR   0083H   A   
+DPL . . . . . . . . .  D ADDR   0082H   A   
+EA. . . . . . . . . .  B ADDR   00A8H.7 A   
+EIE1. . . . . . . . .  D ADDR   00E6H   A   
+EIE2. . . . . . . . .  D ADDR   00E7H   A   
+EIP1. . . . . . . . .  D ADDR   00F6H   A   
+EIP2. . . . . . . . .  D ADDR   00F7H   A   
+EMI0CF. . . . . . . .  D ADDR   00A3H   A   
+EMI0CN. . . . . . . .  D ADDR   00A2H   A   
+EMI0TC. . . . . . . .  D ADDR   00A1H   A   
+EMI0_PAGE . . . . . .  N NUMB   0000H   A   
+ENSMB . . . . . . . .  B ADDR   00C0H.6 A   
+ES0 . . . . . . . . .  B ADDR   00A8H.4 A   
+ET0 . . . . . . . . .  B ADDR   00A8H.1 A   
+ET1 . . . . . . . . .  B ADDR   00A8H.3 A   
+ET2 . . . . . . . . .  B ADDR   00A8H.5 A   
+EX0 . . . . . . . . .  B ADDR   00A8H.0 A   
+EX1 . . . . . . . . .  B ADDR   00A8H.2 A   
+EXEN2 . . . . . . . .  B ADDR   00C8H.3 A   
+EXEN3 . . . . . . . .  B ADDR   00C8H.3 A   
+EXEN4 . . . . . . . .  B ADDR   00C8H.3 A   
+EXF2. . . . . . . . .  B ADDR   00C8H.6 A   
+EXF3. . . . . . . . .  B ADDR   00C8H.6 A   
+EXF4. . . . . . . . .  B ADDR   00C8H.6 A   
+F0. . . . . . . . . .  B ADDR   00D0H.5 A   
+F1. . . . . . . . . .  B ADDR   00D0H.1 A   
+FLACL . . . . . . . .  D ADDR   00B7H   A   
+FLAG_CLEARANCE_CHECK.  C ADDR   0351H   A   
+FLHBUSY . . . . . . .  B ADDR   0088H.0 A   
+FLSCL . . . . . . . .  D ADDR   00B7H   A   
+FLSTAT. . . . . . . .  D ADDR   0088H   A   
+GAR1. . . . . . . . .  N NUMB   0001H   A   
+IE. . . . . . . . . .  D ADDR   00A8H   A   
+A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 17:57:01 PAGE    23
 
-IE1. . . . . . . .  B ADDR   0088H.3 A   
-IP . . . . . . . .  D ADDR   00B8H   A   
-IT0. . . . . . . .  B ADDR   0088H.0 A   
-IT1. . . . . . . .  B ADDR   0088H.2 A   
-LEAST_BYTE_CHANGE.  C ADDR   0351H   A   
-LEGACY_PAGE. . . .  N NUMB   0000H   A   
-MAC0ACC0 . . . . .  D ADDR   0093H   A   
-MAC0ACC1 . . . . .  D ADDR   0094H   A   
-MAC0ACC2 . . . . .  D ADDR   0095H   A   
-MAC0ACC3 . . . . .  D ADDR   0096H   A   
-MAC0AH . . . . . .  D ADDR   00C2H   A   
-MAC0AL . . . . . .  D ADDR   00C1H   A   
-MAC0BH . . . . . .  D ADDR   0092H   A   
-MAC0BL . . . . . .  D ADDR   0091H   A   
-MAC0CF . . . . . .  D ADDR   00C3H   A   
-MAC0HO . . . . . .  B ADDR   00C0H.3 A   
-MAC0N. . . . . . .  B ADDR   00C0H.0 A   
-MAC0OVR. . . . . .  D ADDR   0097H   A   
-MAC0RNDH . . . . .  D ADDR   00CFH   A   
-MAC0RNDL . . . . .  D ADDR   00CEH   A   
-MAC0SO . . . . . .  B ADDR   00C0H.1 A   
-MAC0STA. . . . . .  D ADDR   00C0H   A   
-MAC0Z. . . . . . .  B ADDR   00C0H.2 A   
-MAC0_PAGE. . . . .  N NUMB   0003H   A   
-MCE1 . . . . . . .  B ADDR   0098H.5 A   
-MODF . . . . . . .  B ADDR   00F8H.5 A   
-MR . . . . . . . .  N NUMB   0000H   A   
-NSSMD0 . . . . . .  B ADDR   00F8H.2 A   
-NSSMD1 . . . . . .  B ADDR   00F8H.3 A   
-OSCICL . . . . . .  D ADDR   008BH   A   
-OSCICN . . . . . .  D ADDR   008AH   A   
-OSCXCN . . . . . .  D ADDR   008CH   A   
-OV . . . . . . . .  B ADDR   00D0H.2 A   
-P. . . . . . . . .  B ADDR   00D0H.0 A   
-P0 . . . . . . . .  D ADDR   0080H   A   
-P0MDOUT. . . . . .  D ADDR   00A4H   A   
-P1 . . . . . . . .  D ADDR   0090H   A   
-P1MDIN . . . . . .  D ADDR   00ADH   A   
-P1MDOUT. . . . . .  D ADDR   00A5H   A   
-P2 . . . . . . . .  D ADDR   00A0H   A   
-P2MDOUT. . . . . .  D ADDR   00A6H   A   
-P3 . . . . . . . .  D ADDR   00B0H   A   
-P3MDOUT. . . . . .  D ADDR   00A7H   A   
-P4 . . . . . . . .  D ADDR   00C8H   A   
-P4MDOUT. . . . . .  D ADDR   009CH   A   
-P5 . . . . . . . .  D ADDR   00D8H   A   
-P5MDOUT. . . . . .  D ADDR   009DH   A   
-P6 . . . . . . . .  D ADDR   00E8H   A   
-P6MDOUT. . . . . .  D ADDR   009EH   A   
-P7 . . . . . . . .  D ADDR   00F8H   A   
-P7MDOUT. . . . . .  D ADDR   009FH   A   
-PCA0CN . . . . . .  D ADDR   00D8H   A   
-PCA0CPH0 . . . . .  D ADDR   00FCH   A   
-PCA0CPH1 . . . . .  D ADDR   00FEH   A   
-PCA0CPH2 . . . . .  D ADDR   00EAH   A   
-PCA0CPH3 . . . . .  D ADDR   00ECH   A   
-PCA0CPH4 . . . . .  D ADDR   00EEH   A   
-PCA0CPH5 . . . . .  D ADDR   00E2H   A   
-PCA0CPL0 . . . . .  D ADDR   00FBH   A   
-PCA0CPL1 . . . . .  D ADDR   00FDH   A   
-PCA0CPL2 . . . . .  D ADDR   00E9H   A   
-PCA0CPL3 . . . . .  D ADDR   00EBH   A   
-PCA0CPL4 . . . . .  D ADDR   00EDH   A   
-PCA0CPL5 . . . . .  D ADDR   00E1H   A   
-PCA0CPM0 . . . . .  D ADDR   00DAH   A   
-PCA0CPM1 . . . . .  D ADDR   00DBH   A   
-A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 12:54:51 PAGE    23
+IE0 . . . . . . . . .  B ADDR   0088H.1 A   
+IE1 . . . . . . . . .  B ADDR   0088H.3 A   
+INC_LEN . . . . . . .  C ADDR   03CAH   A   
+IP. . . . . . . . . .  D ADDR   00B8H   A   
+IT0 . . . . . . . . .  B ADDR   0088H.0 A   
+IT1 . . . . . . . . .  B ADDR   0088H.2 A   
+LEGACY_PAGE . . . . .  N NUMB   0000H   A   
+MAC0ACC0. . . . . . .  D ADDR   0093H   A   
+MAC0ACC1. . . . . . .  D ADDR   0094H   A   
+MAC0ACC2. . . . . . .  D ADDR   0095H   A   
+MAC0ACC3. . . . . . .  D ADDR   0096H   A   
+MAC0AH. . . . . . . .  D ADDR   00C2H   A   
+MAC0AL. . . . . . . .  D ADDR   00C1H   A   
+MAC0BH. . . . . . . .  D ADDR   0092H   A   
+MAC0BL. . . . . . . .  D ADDR   0091H   A   
+MAC0CF. . . . . . . .  D ADDR   00C3H   A   
+MAC0HO. . . . . . . .  B ADDR   00C0H.3 A   
+MAC0N . . . . . . . .  B ADDR   00C0H.0 A   
+MAC0OVR . . . . . . .  D ADDR   0097H   A   
+MAC0RNDH. . . . . . .  D ADDR   00CFH   A   
+MAC0RNDL. . . . . . .  D ADDR   00CEH   A   
+MAC0SO. . . . . . . .  B ADDR   00C0H.1 A   
+MAC0STA . . . . . . .  D ADDR   00C0H   A   
+MAC0Z . . . . . . . .  B ADDR   00C0H.2 A   
+MAC0_PAGE . . . . . .  N NUMB   0003H   A   
+MCE1. . . . . . . . .  B ADDR   0098H.5 A   
+MODF. . . . . . . . .  B ADDR   00F8H.5 A   
+MR. . . . . . . . . .  N NUMB   0000H   A   
+MSIR. . . . . . . . .  N NUMB   0018H   A   
+NSSMD0. . . . . . . .  B ADDR   00F8H.2 A   
+NSSMD1. . . . . . . .  B ADDR   00F8H.3 A   
+OSCICL. . . . . . . .  D ADDR   008BH   A   
+OSCICN. . . . . . . .  D ADDR   008AH   A   
+OSCXCN. . . . . . . .  D ADDR   008CH   A   
+OV. . . . . . . . . .  B ADDR   00D0H.2 A   
+P . . . . . . . . . .  B ADDR   00D0H.0 A   
+P0. . . . . . . . . .  D ADDR   0080H   A   
+P0MDOUT . . . . . . .  D ADDR   00A4H   A   
+P1. . . . . . . . . .  D ADDR   0090H   A   
+P1MDIN. . . . . . . .  D ADDR   00ADH   A   
+P1MDOUT . . . . . . .  D ADDR   00A5H   A   
+P2. . . . . . . . . .  D ADDR   00A0H   A   
+P2MDOUT . . . . . . .  D ADDR   00A6H   A   
+P3. . . . . . . . . .  D ADDR   00B0H   A   
+P3MDOUT . . . . . . .  D ADDR   00A7H   A   
+P4. . . . . . . . . .  D ADDR   00C8H   A   
+P4MDOUT . . . . . . .  D ADDR   009CH   A   
+P5. . . . . . . . . .  D ADDR   00D8H   A   
+P5MDOUT . . . . . . .  D ADDR   009DH   A   
+P6. . . . . . . . . .  D ADDR   00E8H   A   
+P6MDOUT . . . . . . .  D ADDR   009EH   A   
+P7. . . . . . . . . .  D ADDR   00F8H   A   
+P7MDOUT . . . . . . .  D ADDR   009FH   A   
+PCA0CN. . . . . . . .  D ADDR   00D8H   A   
+PCA0CPH0. . . . . . .  D ADDR   00FCH   A   
+PCA0CPH1. . . . . . .  D ADDR   00FEH   A   
+PCA0CPH2. . . . . . .  D ADDR   00EAH   A   
+PCA0CPH3. . . . . . .  D ADDR   00ECH   A   
+PCA0CPH4. . . . . . .  D ADDR   00EEH   A   
+PCA0CPH5. . . . . . .  D ADDR   00E2H   A   
+PCA0CPL0. . . . . . .  D ADDR   00FBH   A   
+PCA0CPL1. . . . . . .  D ADDR   00FDH   A   
+PCA0CPL2. . . . . . .  D ADDR   00E9H   A   
+PCA0CPL3. . . . . . .  D ADDR   00EBH   A   
+PCA0CPL4. . . . . . .  D ADDR   00EDH   A   
+PCA0CPL5. . . . . . .  D ADDR   00E1H   A   
+A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 17:57:01 PAGE    24
 
-PCA0CPM2 . . . . .  D ADDR   00DCH   A   
-PCA0CPM3 . . . . .  D ADDR   00DDH   A   
-PCA0CPM4 . . . . .  D ADDR   00DEH   A   
-PCA0CPM5 . . . . .  D ADDR   00DFH   A   
-PCA0H. . . . . . .  D ADDR   00FAH   A   
-PCA0L. . . . . . .  D ADDR   00F9H   A   
-PCA0MD . . . . . .  D ADDR   00D9H   A   
-PCA0_PAGE. . . . .  N NUMB   0000H   A   
-PCON . . . . . . .  D ADDR   0087H   A   
-PIN_RSTN . . . . .  B ADDR   00A0H.0 A   
-PLL0CN . . . . . .  D ADDR   0089H   A   
-PLL0DIV. . . . . .  D ADDR   008DH   A   
-PLL0FLT. . . . . .  D ADDR   008FH   A   
-PLL0MUL. . . . . .  D ADDR   008EH   A   
-PLL0_PAGE. . . . .  N NUMB   000FH   A   
-POLL_OPEN. . . . .  C ADDR   0302H   A   
-PS . . . . . . . .  B ADDR   00B8H.4 A   
-PSBANK . . . . . .  D ADDR   00B1H   A   
-PSCTL. . . . . . .  D ADDR   008FH   A   
-PSW. . . . . . . .  D ADDR   00D0H   A   
-PT0. . . . . . . .  B ADDR   00B8H.1 A   
-PT1. . . . . . . .  B ADDR   00B8H.3 A   
-PT2. . . . . . . .  B ADDR   00B8H.5 A   
-PX0. . . . . . . .  B ADDR   00B8H.0 A   
-PX1. . . . . . . .  B ADDR   00B8H.2 A   
-RB80 . . . . . . .  B ADDR   0098H.2 A   
-RB81 . . . . . . .  B ADDR   0098H.2 A   
-RCAP2H . . . . . .  D ADDR   00CBH   A   
-RCAP2L . . . . . .  D ADDR   00CAH   A   
-RCAP3H . . . . . .  D ADDR   00CBH   A   
-RCAP3L . . . . . .  D ADDR   00CAH   A   
-RCAP4H . . . . . .  D ADDR   00CBH   A   
-RCAP4L . . . . . .  D ADDR   00CAH   A   
-RCR1 . . . . . . .  N NUMB   001BH   A   
-READ_DATA. . . . .  C ADDR   0359H   A   
-REF0CN . . . . . .  D ADDR   00D1H   A   
-REN0 . . . . . . .  B ADDR   0098H.4 A   
-REN1 . . . . . . .  B ADDR   0098H.4 A   
-RI0. . . . . . . .  B ADDR   0098H.0 A   
-RI1. . . . . . . .  B ADDR   0098H.0 A   
-RS0. . . . . . . .  B ADDR   00D0H.3 A   
-RS1. . . . . . . .  B ADDR   00D0H.4 A   
-RSTSRC . . . . . .  D ADDR   00EFH   A   
-RTR1 . . . . . . .  N NUMB   0019H   A   
-RXOVRN . . . . . .  B ADDR   00F8H.4 A   
-S1MODE . . . . . .  B ADDR   0098H.7 A   
-S1_CR. . . . . . .  N NUMB   0001H   A   
-S1_MR. . . . . . .  N NUMB   0000H   A   
-S1_PORT. . . . . .  N NUMB   0004H   A   
-S1_RXBUF_SIZE. . .  N NUMB   001EH   A   
-S1_RX_RD . . . . .  N NUMB   0028H   A   
-S1_RX_WR . . . . .  N NUMB   002AH   A   
-S1_SR. . . . . . .  N NUMB   0003H   A   
-S1_TTL . . . . . .  N NUMB   0016H   A   
-S1_TXBUF_SIZE. . .  N NUMB   001FH   A   
-SADDR0 . . . . . .  D ADDR   00A9H   A   
-SADEN0 . . . . . .  D ADDR   00B9H   A   
-SBUF0. . . . . . .  D ADDR   0099H   A   
-SBUF1. . . . . . .  D ADDR   0099H   A   
-SCON0. . . . . . .  D ADDR   0098H   A   
-SCON1. . . . . . .  D ADDR   0098H   A   
-SFRLAST. . . . . .  D ADDR   0086H   A   
-SFRNEXT. . . . . .  D ADDR   0085H   A   
-SFRPAGE. . . . . .  D ADDR   0084H   A   
-SFRPGCN. . . . . .  D ADDR   0096H   A   
-SHAR1. . . . . . .  N NUMB   0009H   A   
-A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 12:54:51 PAGE    24
+PCA0CPM0. . . . . . .  D ADDR   00DAH   A   
+PCA0CPM1. . . . . . .  D ADDR   00DBH   A   
+PCA0CPM2. . . . . . .  D ADDR   00DCH   A   
+PCA0CPM3. . . . . . .  D ADDR   00DDH   A   
+PCA0CPM4. . . . . . .  D ADDR   00DEH   A   
+PCA0CPM5. . . . . . .  D ADDR   00DFH   A   
+PCA0H . . . . . . . .  D ADDR   00FAH   A   
+PCA0L . . . . . . . .  D ADDR   00F9H   A   
+PCA0MD. . . . . . . .  D ADDR   00D9H   A   
+PCA0_PAGE . . . . . .  N NUMB   0000H   A   
+PCON. . . . . . . . .  D ADDR   0087H   A   
+PIN_RSTN. . . . . . .  B ADDR   00A0H.0 A   
+PLL0CN. . . . . . . .  D ADDR   0089H   A   
+PLL0DIV . . . . . . .  D ADDR   008DH   A   
+PLL0FLT . . . . . . .  D ADDR   008FH   A   
+PLL0MUL . . . . . . .  D ADDR   008EH   A   
+PLL0_PAGE . . . . . .  N NUMB   000FH   A   
+POLL_OPEN . . . . . .  C ADDR   0302H   A   
+PS. . . . . . . . . .  B ADDR   00B8H.4 A   
+PSBANK. . . . . . . .  D ADDR   00B1H   A   
+PSCTL . . . . . . . .  D ADDR   008FH   A   
+PSW . . . . . . . . .  D ADDR   00D0H   A   
+PT0 . . . . . . . . .  B ADDR   00B8H.1 A   
+PT1 . . . . . . . . .  B ADDR   00B8H.3 A   
+PT2 . . . . . . . . .  B ADDR   00B8H.5 A   
+PX0 . . . . . . . . .  B ADDR   00B8H.0 A   
+PX1 . . . . . . . . .  B ADDR   00B8H.2 A   
+RB80. . . . . . . . .  B ADDR   0098H.2 A   
+RB81. . . . . . . . .  B ADDR   0098H.2 A   
+RCAP2H. . . . . . . .  D ADDR   00CBH   A   
+RCAP2L. . . . . . . .  D ADDR   00CAH   A   
+RCAP3H. . . . . . . .  D ADDR   00CBH   A   
+RCAP3L. . . . . . . .  D ADDR   00CAH   A   
+RCAP4H. . . . . . . .  D ADDR   00CBH   A   
+RCAP4L. . . . . . . .  D ADDR   00CAH   A   
+RCR1. . . . . . . . .  N NUMB   001BH   A   
+REF0CN. . . . . . . .  D ADDR   00D1H   A   
+REN0. . . . . . . . .  B ADDR   0098H.4 A   
+REN1. . . . . . . . .  B ADDR   0098H.4 A   
+RI0 . . . . . . . . .  B ADDR   0098H.0 A   
+RI1 . . . . . . . . .  B ADDR   0098H.0 A   
+RS0 . . . . . . . . .  B ADDR   00D0H.3 A   
+RS1 . . . . . . . . .  B ADDR   00D0H.4 A   
+RSTSRC. . . . . . . .  D ADDR   00EFH   A   
+RTR1. . . . . . . . .  N NUMB   0019H   A   
+RXOVRN. . . . . . . .  B ADDR   00F8H.4 A   
+S1MODE. . . . . . . .  B ADDR   0098H.7 A   
+S1_CR . . . . . . . .  N NUMB   0001H   A   
+S1_MR . . . . . . . .  N NUMB   0000H   A   
+S1_PORT . . . . . . .  N NUMB   0004H   A   
+S1_RXBUF_SIZE . . . .  N NUMB   001EH   A   
+S1_RX_RD. . . . . . .  N NUMB   0028H   A   
+S1_RX_WR. . . . . . .  N NUMB   002AH   A   
+S1_SR . . . . . . . .  N NUMB   0003H   A   
+S1_TTL. . . . . . . .  N NUMB   0016H   A   
+S1_TXBUF_SIZE . . . .  N NUMB   001FH   A   
+SADDR0. . . . . . . .  D ADDR   00A9H   A   
+SADEN0. . . . . . . .  D ADDR   00B9H   A   
+SBUF0 . . . . . . . .  D ADDR   0099H   A   
+SBUF1 . . . . . . . .  D ADDR   0099H   A   
+SCON0 . . . . . . . .  D ADDR   0098H   A   
+SCON1 . . . . . . . .  D ADDR   0098H   A   
+SFRLAST . . . . . . .  D ADDR   0086H   A   
+SFRNEXT . . . . . . .  D ADDR   0085H   A   
+SFRPAGE . . . . . . .  D ADDR   0084H   A   
+SFRPGCN . . . . . . .  D ADDR   0096H   A   
+A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 17:57:01 PAGE    25
 
-SI . . . . . . . .  B ADDR   00C0H.3 A   
-SIPR1. . . . . . .  N NUMB   000FH   A   
-SM00 . . . . . . .  B ADDR   0098H.7 A   
-SM10 . . . . . . .  B ADDR   0098H.6 A   
-SM20 . . . . . . .  B ADDR   0098H.5 A   
-SMB0ADR. . . . . .  D ADDR   00C3H   A   
-SMB0CN . . . . . .  D ADDR   00C0H   A   
-SMB0CR . . . . . .  D ADDR   00CFH   A   
-SMB0DAT. . . . . .  D ADDR   00C2H   A   
-SMB0STA. . . . . .  D ADDR   00C1H   A   
-SMB0_PAGE. . . . .  N NUMB   0000H   A   
-SMBFTE . . . . . .  B ADDR   00C0H.1 A   
-SMBTOE . . . . . .  B ADDR   00C0H.0 A   
-SP . . . . . . . .  D ADDR   0081H   A   
-SPI0CFG. . . . . .  D ADDR   009AH   A   
-SPI0CKR. . . . . .  D ADDR   009DH   A   
-SPI0CN . . . . . .  D ADDR   00F8H   A   
-SPI0DAT. . . . . .  D ADDR   009BH   A   
-SPI0_PAGE. . . . .  N NUMB   0000H   A   
-SPI0_R . . . . . .  C ADDR   038FH   A   
-SPI0_W . . . . . .  C ADDR   039BH   A   
-SPIEN. . . . . . .  B ADDR   00F8H.0 A   
-SPIF . . . . . . .  B ADDR   00F8H.7 A   
-SSTA0. . . . . . .  D ADDR   0091H   A   
-STA. . . . . . . .  B ADDR   00C0H.5 A   
-STO. . . . . . . .  B ADDR   00C0H.4 A   
-SUBR1. . . . . . .  N NUMB   0005H   A   
-TB80 . . . . . . .  B ADDR   0098H.3 A   
-TB81 . . . . . . .  B ADDR   0098H.3 A   
-TCON . . . . . . .  D ADDR   0088H   A   
-TF0. . . . . . . .  B ADDR   0088H.5 A   
-TF1. . . . . . . .  B ADDR   0088H.7 A   
-TF2. . . . . . . .  B ADDR   00C8H.7 A   
-TF3. . . . . . . .  B ADDR   00C8H.7 A   
-TF4. . . . . . . .  B ADDR   00C8H.7 A   
-TH0. . . . . . . .  D ADDR   008CH   A   
-TH1. . . . . . . .  D ADDR   008DH   A   
-TI0. . . . . . . .  B ADDR   0098H.1 A   
-TI1. . . . . . . .  B ADDR   0098H.1 A   
-TIMER01_PAGE . . .  N NUMB   0000H   A   
-TL0. . . . . . . .  D ADDR   008AH   A   
-TL1. . . . . . . .  D ADDR   008BH   A   
-TMOD . . . . . . .  D ADDR   0089H   A   
-TMR2CF . . . . . .  D ADDR   00C9H   A   
-TMR2CN . . . . . .  D ADDR   00C8H   A   
-TMR2H. . . . . . .  D ADDR   00CDH   A   
-TMR2L. . . . . . .  D ADDR   00CCH   A   
-TMR2_PAGE. . . . .  N NUMB   0000H   A   
-TMR3CF . . . . . .  D ADDR   00C9H   A   
-TMR3CN . . . . . .  D ADDR   00C8H   A   
-TMR3H. . . . . . .  D ADDR   00CDH   A   
-TMR3L. . . . . . .  D ADDR   00CCH   A   
-TMR3_PAGE. . . . .  N NUMB   0001H   A   
-TMR4CF . . . . . .  D ADDR   00C9H   A   
-TMR4CN . . . . . .  D ADDR   00C8H   A   
-TMR4H. . . . . . .  D ADDR   00CDH   A   
-TMR4L. . . . . . .  D ADDR   00CCH   A   
-TMR4_PAGE. . . . .  N NUMB   0002H   A   
-TR0. . . . . . . .  B ADDR   0088H.4 A   
-TR1. . . . . . . .  B ADDR   0088H.6 A   
-TR2. . . . . . . .  B ADDR   00C8H.2 A   
-TR3. . . . . . . .  B ADDR   00C8H.2 A   
-TR4. . . . . . . .  B ADDR   00C8H.2 A   
-TXBMT. . . . . . .  B ADDR   00F8H.1 A   
-UART0_PAGE . . . .  N NUMB   0000H   A   
-UART1_PAGE . . . .  N NUMB   0001H   A   
-A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 12:54:51 PAGE    25
+SHAR1 . . . . . . . .  N NUMB   0009H   A   
+SI. . . . . . . . . .  B ADDR   00C0H.3 A   
+SIPR1 . . . . . . . .  N NUMB   000FH   A   
+SIR . . . . . . . . .  N NUMB   0017H   A   
+SM00. . . . . . . . .  B ADDR   0098H.7 A   
+SM10. . . . . . . . .  B ADDR   0098H.6 A   
+SM20. . . . . . . . .  B ADDR   0098H.5 A   
+SMB0ADR . . . . . . .  D ADDR   00C3H   A   
+SMB0CN. . . . . . . .  D ADDR   00C0H   A   
+SMB0CR. . . . . . . .  D ADDR   00CFH   A   
+SMB0DAT . . . . . . .  D ADDR   00C2H   A   
+SMB0STA . . . . . . .  D ADDR   00C1H   A   
+SMB0_PAGE . . . . . .  N NUMB   0000H   A   
+SMBFTE. . . . . . . .  B ADDR   00C0H.1 A   
+SMBTOE. . . . . . . .  B ADDR   00C0H.0 A   
+SP. . . . . . . . . .  D ADDR   0081H   A   
+SPI0CFG . . . . . . .  D ADDR   009AH   A   
+SPI0CKR . . . . . . .  D ADDR   009DH   A   
+SPI0CN. . . . . . . .  D ADDR   00F8H   A   
+SPI0DAT . . . . . . .  D ADDR   009BH   A   
+SPI0_PAGE . . . . . .  N NUMB   0000H   A   
+SPI0_R. . . . . . . .  C ADDR   0428H   A   
+SPI0_W. . . . . . . .  C ADDR   0434H   A   
+SPIEN . . . . . . . .  B ADDR   00F8H.0 A   
+SPIF. . . . . . . . .  B ADDR   00F8H.7 A   
+SSTA0 . . . . . . . .  D ADDR   0091H   A   
+STA . . . . . . . . .  B ADDR   00C0H.5 A   
+STO . . . . . . . . .  B ADDR   00C0H.4 A   
+SUBR1 . . . . . . . .  N NUMB   0005H   A   
+TB80. . . . . . . . .  B ADDR   0098H.3 A   
+TB81. . . . . . . . .  B ADDR   0098H.3 A   
+TCON. . . . . . . . .  D ADDR   0088H   A   
+TF0 . . . . . . . . .  B ADDR   0088H.5 A   
+TF1 . . . . . . . . .  B ADDR   0088H.7 A   
+TF2 . . . . . . . . .  B ADDR   00C8H.7 A   
+TF3 . . . . . . . . .  B ADDR   00C8H.7 A   
+TF4 . . . . . . . . .  B ADDR   00C8H.7 A   
+TH0 . . . . . . . . .  D ADDR   008CH   A   
+TH1 . . . . . . . . .  D ADDR   008DH   A   
+TI0 . . . . . . . . .  B ADDR   0098H.1 A   
+TI1 . . . . . . . . .  B ADDR   0098H.1 A   
+TIMER01_PAGE. . . . .  N NUMB   0000H   A   
+TL0 . . . . . . . . .  D ADDR   008AH   A   
+TL1 . . . . . . . . .  D ADDR   008BH   A   
+TMOD. . . . . . . . .  D ADDR   0089H   A   
+TMR2CF. . . . . . . .  D ADDR   00C9H   A   
+TMR2CN. . . . . . . .  D ADDR   00C8H   A   
+TMR2H . . . . . . . .  D ADDR   00CDH   A   
+TMR2L . . . . . . . .  D ADDR   00CCH   A   
+TMR2_PAGE . . . . . .  N NUMB   0000H   A   
+TMR3CF. . . . . . . .  D ADDR   00C9H   A   
+TMR3CN. . . . . . . .  D ADDR   00C8H   A   
+TMR3H . . . . . . . .  D ADDR   00CDH   A   
+TMR3L . . . . . . . .  D ADDR   00CCH   A   
+TMR3_PAGE . . . . . .  N NUMB   0001H   A   
+TMR4CF. . . . . . . .  D ADDR   00C9H   A   
+TMR4CN. . . . . . . .  D ADDR   00C8H   A   
+TMR4H . . . . . . . .  D ADDR   00CDH   A   
+TMR4L . . . . . . . .  D ADDR   00CCH   A   
+TMR4_PAGE . . . . . .  N NUMB   0002H   A   
+TR0 . . . . . . . . .  B ADDR   0088H.4 A   
+TR1 . . . . . . . . .  B ADDR   0088H.6 A   
+TR2 . . . . . . . . .  B ADDR   00C8H.2 A   
+TR3 . . . . . . . . .  B ADDR   00C8H.2 A   
+TR4 . . . . . . . . .  B ADDR   00C8H.2 A   
+TXBMT . . . . . . . .  B ADDR   00F8H.1 A   
+A51 MACRO ASSEMBLER  MAIN                                                                 08/23/2023 17:57:01 PAGE    26
 
-WAIT_DATA. . . . .  C ADDR   0321H   A   
-WAIT_LN. . . . . .  C ADDR   038AH   A   
-WAIT_LONG. . . . .  C ADDR   0386H   A   
-WAIT_SH. . . . . .  C ADDR   0383H   A   
-WAIT_SHORT . . . .  C ADDR   0381H   A   
-WCOL . . . . . . .  B ADDR   00F8H.6 A   
-WDTCN. . . . . . .  D ADDR   00FFH   A   
-XBR0 . . . . . . .  D ADDR   00E1H   A   
-XBR1 . . . . . . .  D ADDR   00E2H   A   
-XBR2 . . . . . . .  D ADDR   00E3H   A   
+UART0_PAGE. . . . . .  N NUMB   0000H   A   
+UART1_PAGE. . . . . .  N NUMB   0001H   A   
+WAIT_FOR_AN_INTERRUPT  C ADDR   0321H   A   
+WAIT_LN . . . . . . .  C ADDR   0423H   A   
+WAIT_LONG . . . . . .  C ADDR   041FH   A   
+WAIT_SH . . . . . . .  C ADDR   041CH   A   
+WAIT_SHORT. . . . . .  C ADDR   041AH   A   
+WCOL. . . . . . . . .  B ADDR   00F8H.6 A   
+WDTCN . . . . . . . .  D ADDR   00FFH   A   
+XBR0. . . . . . . . .  D ADDR   00E1H   A   
+XBR1. . . . . . . . .  D ADDR   00E2H   A   
+XBR2. . . . . . . . .  D ADDR   00E3H   A   
 
 
 REGISTER BANK(S) USED: 0 

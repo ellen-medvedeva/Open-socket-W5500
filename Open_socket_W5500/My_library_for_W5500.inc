@@ -18,8 +18,8 @@ S1_CR		EQU		0x01
 S1_RX_WR	EQU		0x2A
 S1_RX_RD	EQU		0x28
 
-
-
+MSIR		EQU		0x18
+SIR			EQU		0x17
 
 Wait_short:
 	MOV		R0,			#100

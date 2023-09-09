@@ -656,104 +656,220 @@ Poll_Open:
 	
 	CJNE	A,		#0x22,		Poll_Open
 	
-	MOV		0x20,		#0
-	MOV		0x21,		#0
-;Loop:	
-;Считываем, что происходит в регистре S1_RX_WR
-Wait_data:
+	MOV		DPH,	#0x00
+	MOV		DPL,	#0x06
+
+
+
+;Дождемся, пока на сокете 1 произойдет прерывание.
+Wait_for_an_interrupt:
 	CLR		P0.3
 	ACALL	Wait_short
 	
 	CLR		A
 	ACALL	SPI0_W
 
-	MOV		A,		#S1_RX_WR
+	MOV		A,		#SIR
+	ACALL	SPI0_W
+
+	MOV		A,		#00000000b
+	ACALL	SPI0_W
+
+	CLR		A
+	ACALL	SPI0_R
+		
+	SETB	P0.3
+	ACALL	Wait_short
+	
+	JNB 	ACC.1,	Wait_for_an_interrupt	;	Переход, если бит равен нулю.
+
+;Обнуляем флажок.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#SIR
+	ACALL	SPI0_W
+
+	MOV		A,		#00000100b
+	ACALL	SPI0_W
+
+	MOV		A,		#00000000b
+	ACALL	SPI0_W
+		
+	SETB	P0.3
+	ACALL	Wait_short
+
+;Проверяем, что флажок обнулился.
+Flag_clearance_check:
+	JB 		ACC.1,	Flag_clearance_check		;	Переход, если бит равен единице.
+
+;Переходим в буфер RX сокета 1 и считываем сначала длину сообщения.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	MOV		A,		DPH
+	ACALL	SPI0_W
+
+	MOV		A,		DPL
+	ACALL	SPI0_W
+
+
+;Вот это важный шаг, только пока непонятно, куда его поставить.
+	MOV 	A, 		DPL
+	CLR 	C
+	ADDC 	A, 		0x21
+	MOV 	DPL,	 A
+
+	MOV 	A, 		DPH
+	ADDC 	A, 		0x20
+	MOV 	DPH,	 A	
+	
+	
+	
+	MOV		A,		#00111000b
+	ACALL	SPI0_W
+
+	CLR		A
+	ACALL	SPI0_R
+	MOV		0x20,	A
+	
+	CLR		A
+	ACALL	SPI0_R
+	MOV		0x21,	A
+
+	SETB	P0.3
+	ACALL	Wait_short
+	
+
+;Пока с длиной ничего не случилось, меняем указатель чтения.
+;Сначала читаем текущее значение.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_RX_RD
 	ACALL	SPI0_W
 
 	MOV		A,		#00101000b
 	ACALL	SPI0_W
+
+	CLR		A
+	ACALL	SPI0_R
+	MOV		0x22,	A
 	
 	CLR		A
 	ACALL	SPI0_R
-	MOV		0x22,		A		;Запоминаем текущие значения
-	
-	CLR		A
-	ACALL	SPI0_R
-	MOV		0x23,		A		;Запоминаем текущие значения
-	
+	MOV		0x23,	A
+
 	SETB	P0.3
 	ACALL	Wait_short
 
+;Складываем текущее значение регистра с длинной сообщения.
+	MOV 	A, 		0x23
+	CLR 	C
+	ADDC 	A, 		0x21
+	MOV 	0x23,	 A
 
-	MOV		A,		0x22
-	JNZ		High_byte_change
-	MOV		A,		0x23
-	JNZ		Least_byte_change
-	LJMP	Wait_data
-	
-	High_byte_change:
-		MOV		A,		0x22
-		CJNE	A,		0x20,		Read_data
-		LJMP	Least_byte_change
-	
-	Least_byte_change:
-		MOV		A,		0x23
-		CJNE	A,		0x21,		Read_data	
-		LJMP	High_byte_change
-		
-	Read_data:
-		MOV		0x20,		0x22
-		MOV		0x21,		0x23	
-;Вполне вероятно, что это адрес в буфере Rx сокета.
-		MOV		DPH,		0x20
-		MOV		DPL,		0x21
-;LJMP Loop
+	MOV 	A, 		0x22
+	ADDC 	A, 		0x20
+	MOV 	0x22,	 A
 
-
-; Теперь перейдем по этому адресу и считаем 2 байта.
+;Записываем получившееся число обратно в регистр.
 	CLR		P0.3
 	ACALL	Wait_short
 	
-	MOV		A,		0x20
+	CLR		A
 	ACALL	SPI0_W
 
-	MOV		A,		0x21
+	MOV		A,		#S1_RX_RD
+	ACALL	SPI0_W
+
+	MOV		A,		#00101100b
+	ACALL	SPI0_W
+
+	MOV 	A,	 0x22
+	ACALL	SPI0_W
+	
+	MOV 	A,	 0x23
+	ACALL	SPI0_W
+
+	SETB	P0.3
+	ACALL	Wait_short
+	
+
+;А теперь считываем сами данные.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	MOV		R3,		#2
+Inc_len:
+	MOV 	A, 		DPL
+	CLR 	C
+	ADDC 	A, 		#1
+	MOV 	DPL,	 A
+
+	MOV 	A, 		DPH
+	SUBB 	A, 		#0
+	MOV 	DPH,	 A
+	DJNZ	R3,		Inc_len
+	
+	MOV		A,		DPH
+	ACALL	SPI0_W
+	
+	MOV		A,		DPL
 	ACALL	SPI0_W
 
 	MOV		A,		#00111000b
 	ACALL	SPI0_W
-	
+
+Data_reading:
 	CLR		A
 	ACALL	SPI0_R
 	
-	CLR		A
-	ACALL	SPI0_R
+	MOV		R3,		A
+;Декремент длинны сообщения.
+	MOV 	A, 		0x21
+	CLR 	C
+	SUBB 	A, 		#1
+	MOV 	0x21,	 A
+
+	MOV 	A, 		0x20
+	SUBB 	A, 		#0
+	MOV 	0x20,	A
+
+;Сообщение закончилось?
+	MOV		A,		0x20
+	ORL		A,		0x21
+
+	JNZ		Data_reading
 	
 	SETB	P0.3
 	ACALL	Wait_short
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+;Даем команду, что прием данных закончен. Т.е. передадим в S1_CR команду RECV.
+	CLR		P0.3
+	ACALL	Wait_short
 	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_CR
+
+	MOV		A,		#00101100b
+	ACALL	SPI0_W
+
+	MOV 	A,	 	#0x40
+	ACALL	SPI0_W
+
+	SETB	P0.3
+	ACALL	Wait_short
 	
-	
-	
-	
-	
-	
-	
+	LJMP	Wait_for_an_interrupt
 	
 	
 	
