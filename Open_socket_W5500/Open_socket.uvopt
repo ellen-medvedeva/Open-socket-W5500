@@ -145,9 +145,9 @@
         <Bp>
           <Number>0</Number>
           <Type>0</Type>
-          <LineNumber>657</LineNumber>
+          <LineNumber>950</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>-16776424</Address>
+          <Address>-16776097</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -156,14 +156,14 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>Main.a51</Filename>
           <ExecCommand></ExecCommand>
-          <Expression></Expression>
+          <Expression>\\Open_socket\MAIN\950</Expression>
         </Bp>
         <Bp>
           <Number>1</Number>
           <Type>0</Type>
-          <LineNumber>687</LineNumber>
+          <LineNumber>1121</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>-16776396</Address>
+          <Address>-16775902</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -172,14 +172,14 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>Main.a51</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\Open_socket\MAIN\687</Expression>
+          <Expression>\\Open_socket\MAIN\1121</Expression>
         </Bp>
         <Bp>
           <Number>2</Number>
           <Type>0</Type>
-          <LineNumber>768</LineNumber>
+          <LineNumber>1062</LineNumber>
           <EnabledFlag>1</EnabledFlag>
-          <Address>-16776302</Address>
+          <Address>-16775972</Address>
           <ByteObject>0</ByteObject>
           <HtxType>0</HtxType>
           <ManyObjects>0</ManyObjects>
@@ -188,7 +188,7 @@
           <BreakIfRCount>1</BreakIfRCount>
           <Filename>Main.a51</Filename>
           <ExecCommand></ExecCommand>
-          <Expression>\\Open_socket\MAIN\768</Expression>
+          <Expression>\\Open_socket\MAIN\1062</Expression>
         </Bp>
       </Breakpoint>
       <Tracepoint>

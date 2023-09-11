@@ -22,6 +22,15 @@ S1_IR		EQU		0x02
 MSIR		EQU		0x18
 SIR			EQU		0x17
 
+S1_TX_WR	EQU		0x24
+	
+S1_DIPR		EQU		0x0C
+S1_DPORT	EQU		0x10
+S1_DHAR		EQU		0x06	
+	
+	
+	
+
 Wait_short:
 	MOV		R0,			#100
 	Wait_sh:

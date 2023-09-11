@@ -280,7 +280,7 @@ CSEG AT 0
 	MOV		A,		#00101100b
 	ACALL	SPI0_W
 
-	MOV		A,		#0x01
+	MOV		A,		#0x10
 	ACALL	SPI0_W
 	
 	SETB	P0.3
@@ -324,6 +324,9 @@ CSEG AT 0
 	SETB	P0.3
 	ACALL	Wait_short
 ;----------------------------------------------------------------
+
+;----------------------------------------------------------------
+
 
 ;3. А теперь настроим размеры буферов для остальных сокетов.
 ;3.1.1. Настраиваем регистр S0_RXBUF_SIZE.
@@ -880,10 +883,246 @@ Data_has_run_out:
 	SETB	P0.3
 	ACALL	Wait_short
 
-LJMP	Wait_for_an_interrupt
+;LJMP	Wait_for_an_interrupt
+
+	MOV		R4,		DPH
+	MOV		R5,		DPL
 
 
+
+
+
+
+;---------------------------------------------------------------------------------------------------------------------------------
+;---------------------------------------------------------------------------------------------------------------------------------
+;Запишем несколько регистров.
+;1.1.
+	CLR		P0.3
+	ACALL	Wait_short
 	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_DIPR
+	ACALL	SPI0_W
+
+	MOV		A,		#00101100b
+	ACALL	SPI0_W
+
+	MOV		A,		#0xC0
+	ACALL	SPI0_W
+	
+	MOV		A,		#0xA8
+	ACALL	SPI0_W
+	
+	MOV		A,		#0x14
+	ACALL	SPI0_W
+	
+	MOV		A,		#0x02
+	ACALL	SPI0_W
+	
+	SETB	P0.3
+	ACALL	Wait_short
+
+;1.2.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_DPORT
+	ACALL	SPI0_W
+
+	MOV		A,		#00101100b
+	ACALL	SPI0_W
+
+	MOV		A,		#0x0F
+	ACALL	SPI0_W
+	
+	MOV		A,		#0xB7
+	ACALL	SPI0_W
+	
+	SETB	P0.3
+	ACALL	Wait_short
+
+
+;Считываем из регистра S1_Tx_WR адрес, куда записывать данные.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_TX_WR
+	ACALL	SPI0_W
+
+	MOV		A,		#00101000b		;Внимание, мы считываем регистры!
+	ACALL	SPI0_W
+
+	CLR		A
+	ACALL	SPI0_R
+	MOV		DPH,	A
+
+	CLR		A
+	ACALL	SPI0_R
+	MOV		DPL,	A
+
+	SETB	P0.3
+	ACALL	Wait_short
+
+;Определяемся для себя сколько байт данных мы собираемся передавать.
+	MOV		R6,		#2			;Т.е. мы будем передавать 2 байта данных.
+	MOV		R7,		#0xA7		;А именно число A7.
+	
+;Записываем в буфер эти несчастные данные по полученному адресу.
+Write_1_byte:
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	MOV		A,		DPH
+	ACALL	SPI0_W
+
+	MOV		A,		DPL
+	ACALL	SPI0_W
+
+	MOV		A,		#00110100b
+	ACALL	SPI0_W
+
+	MOV		A,		R7
+	ACALL	SPI0_W
+		
+	SETB	P0.3
+	ACALL	Wait_short
+
+;Декремент длинны. 
+	MOV 	A, 		R6
+	CLR 	C
+	SUBB 	A, 		#1
+	MOV 	R6,		A			;Его явно стоит доработать, если в этом будет необходимость.
+	;MOV 	A, 		R2
+	;SUBB 	A, 		#0
+	;MOV 	R2,		A
+	
+;Перемещаем указатель записи.
+	MOV 	A, 		DPL
+	CLR 	C
+	ADDC 	A, 		#1
+	MOV 	DPL,	 A
+
+	MOV 	A, 		DPH
+	ADDC 	A, 		#0
+	MOV 	DPH,	 A
+
+;Проверяем, все ли данные мы передали, которые хотели передать?
+	MOV 	A, 		R6
+	JNZ 	Write_1_byte 			;Переход, если аккумулятор не равен 0.
+
+;Перезаписываем регистр S1_TX_WR.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_TX_WR
+	ACALL	SPI0_W
+
+	MOV		A,		#00101100b		
+	ACALL	SPI0_W
+
+	MOV 	A, 		DPH
+	ACALL	SPI0_W
+
+	MOV 	A, 		DPL
+	ACALL	SPI0_W
+
+	SETB	P0.3
+	ACALL	Wait_short
+	
+;Теперь надо как-то это закончить какой-то командой.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_CR
+	ACALL	SPI0_W
+
+	MOV		A,		#00101100b		
+	ACALL	SPI0_W
+
+	MOV 	A, 		#0x20 
+	ACALL	SPI0_W
+
+	SETB	P0.3
+	ACALL	Wait_short
+
+;Проверяем, что отправка завершена.
+Wait_for_an_interrupt_t:
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_IR
+	ACALL	SPI0_W
+
+	MOV		A,		#00101000b
+	ACALL	SPI0_W
+
+	CLR		A
+	ACALL	SPI0_R
+		
+	SETB	P0.3
+	ACALL	Wait_short
+	
+	JNB 	ACC.4,	Wait_for_an_interrupt_t	;	Переход, если бит равен нулю.
+
+;Обнуляем флажок.
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_IR
+	ACALL	SPI0_W
+
+	MOV		A,		#00101100b
+	ACALL	SPI0_W
+
+	MOV		A,		#00010000b
+	ACALL	SPI0_W
+		
+	SETB	P0.3
+	ACALL	Wait_short
+
+;Проверяем, что флажок обнулился.
+Flag_clearance_check_t:
+	CLR		P0.3
+	ACALL	Wait_short
+	
+	CLR		A
+	ACALL	SPI0_W
+
+	MOV		A,		#S1_IR
+	ACALL	SPI0_W
+
+	MOV		A,		#00101000b
+	ACALL	SPI0_W
+
+	CLR		A
+	ACALL	SPI0_R
+		
+	SETB	P0.3
+	ACALL	Wait_short
+	
+	JB 		ACC.4,	Flag_clearance_check_t		;	Переход, если бит равен единице.
+
+
 	
 $include (My_library_for_W5500.inc)
 
